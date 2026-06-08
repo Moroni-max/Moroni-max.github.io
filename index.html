@@ -9,37 +9,25 @@
 
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:100vh;overflow-x:hidden}
-
-/* FOND ANIMÉ */
 .bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,255,135,0.05) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(0,255,135,0.03) 0%,transparent 50%)}
-
-/* CONTENU */
 .wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:3rem 1.5rem}
-
-/* LOGO */
 .logo{display:flex;align-items:center;gap:10px;margin-bottom:3rem}
 .logo-icon{width:36px;height:36px;background:#00FF87;border-radius:8px;display:flex;align-items:center;justify-content:center}
 .logo-icon svg{width:20px;height:20px;fill:#080808}
 .logo-text{font-size:20px;font-weight:900;letter-spacing:-0.5px}
 .logo-text span{color:#00FF87}
-
-/* HERO */
 .hero{margin-bottom:3rem}
 .badge{display:inline-block;background:rgba(0,255,135,0.1);color:#00FF87;border:1px solid rgba(0,255,135,0.2);border-radius:99px;font-size:12px;font-weight:600;padding:4px 14px;letter-spacing:1px;text-transform:uppercase;margin-bottom:1.5rem}
 .hero h1{font-size:42px;font-weight:900;line-height:1.1;letter-spacing:-1.5px;margin-bottom:1rem}
 .hero h1 span{color:#00FF87}
 .hero p{font-size:15px;color:#888;line-height:1.7;max-width:380px}
-
-/* FEATURES */
 .features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:3rem}
 .feature{background:#111;border:0.5px solid #222;border-radius:12px;padding:14px;display:flex;align-items:flex-start;gap:10px}
 .feature-icon{width:32px;height:32px;background:rgba(0,255,135,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
 .feature-text p{font-size:13px;font-weight:600;margin-bottom:2px}
 .feature-text span{font-size:11px;color:#555}
-
-/* PROFILS */
 .section-label{font-size:11px;font-weight:600;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-.profiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.profiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2rem}
 .profile-card{background:#111;border:1.5px solid #222;border-radius:16px;padding:1.2rem;cursor:pointer;transition:all 0.2s;text-align:center;position:relative}
 .profile-card:hover{border-color:#00FF87;background:#0a0a0a}
 .profile-card.active{border-color:#00FF87;background:rgba(0,255,135,0.05)}
@@ -51,14 +39,18 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
 .avatar-a{background:rgba(255,100,150,0.15);color:#ff6496}
 .profile-name{font-size:15px;font-weight:700;margin-bottom:2px}
 .profile-sub{font-size:11px;color:#555}
-
-/* BOUTON */
-.btn-main{display:block;width:100%;padding:16px;background:#00FF87;color:#080808;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:-0.3px;transition:all 0.2s;text-align:center;text-decoration:none}
-.btn-main:hover{background:#00e87a;transform:translateY(-1px)}
-.btn-main:active{transform:translateY(0)}
-.btn-main:disabled{background:#1a1a1a;color:#444;cursor:not-allowed;transform:none}
-
-/* FOOTER */
+.apps-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.app-card{background:#111;border:1.5px solid #222;border-radius:16px;padding:1.2rem;text-decoration:none;color:#f0f0f0;transition:all 0.2s;position:relative;overflow:hidden}
+.app-card:hover{border-color:#00FF87;background:#0a0a0a;transform:translateY(-2px)}
+.app-card.disabled{opacity:0.4;pointer-events:none}
+.app-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px}
+.app-icon-green{background:rgba(0,255,135,0.1)}
+.app-icon-blue{background:rgba(100,150,255,0.1)}
+.app-name{font-size:15px;font-weight:700;margin-bottom:4px}
+.app-desc{font-size:12px;color:#555;line-height:1.5}
+.app-arrow{position:absolute;bottom:14px;right:14px;color:#333;font-size:16px}
+.app-card:hover .app-arrow{color:#00FF87}
+.no-profile-msg{font-size:12px;color:#444;text-align:center;margin-bottom:1.5rem}
 .footer{text-align:center;margin-top:3rem;font-size:12px;color:#333}
 </style>
 </head>
@@ -68,7 +60,7 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
 
   <div class="logo">
     <div class="logo-icon">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
     </div>
     <div class="logo-text">Fit<span>Track</span></div>
   </div>
@@ -76,47 +68,48 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
   <div class="hero">
     <div class="badge">⚡ Ton espace fitness</div>
     <h1>Suis ta<br><span>nutrition</span><br>chaque jour.</h1>
-    <p>Compte tes calories, suis tes protéines et atteins tes objectifs avec un tracker simple et efficace.</p>
+    <p>Compte tes calories, suis tes séances de course et atteins tes objectifs.</p>
   </div>
 
   <div class="features">
-    <div class="feature">
-      <div class="feature-icon">🔥</div>
-      <div class="feature-text"><p>Calories</p><span>Suivi journalier</span></div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">💪</div>
-      <div class="feature-text"><p>Protéines</p><span>Objectif quotidien</span></div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">📊</div>
-      <div class="feature-text"><p>Historique</p><span>7 derniers jours</span></div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">🍽️</div>
-      <div class="feature-text"><p>80+ aliments</p><span>Base intégrée</span></div>
-    </div>
+    <div class="feature"><div class="feature-icon">🔥</div><div class="feature-text"><p>Calories</p><span>Suivi journalier</span></div></div>
+    <div class="feature"><div class="feature-icon">🏃</div><div class="feature-text"><p>Running</p><span>Séances & stats</span></div></div>
+    <div class="feature"><div class="feature-icon">💪</div><div class="feature-text"><p>Protéines</p><span>Objectif quotidien</span></div></div>
+    <div class="feature"><div class="feature-icon">📊</div><div class="feature-text"><p>Historique</p><span>7 derniers jours</span></div></div>
   </div>
 
   <div class="section-label">Choisir mon profil</div>
   <div class="profiles">
     <div class="profile-card" id="card-kamal" onclick="selectProfile('kamal')">
-      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6"/></svg></div>
+      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#080808" stroke-width="1.5" fill="none"/></svg></div>
       <div class="avatar avatar-k">K</div>
       <div class="profile-name">Kamal</div>
       <div class="profile-sub">Objectif : 75 kg</div>
     </div>
     <div class="profile-card" id="card-alicia" onclick="selectProfile('alicia')">
-      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6"/></svg></div>
+      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#080808" stroke-width="1.5" fill="none"/></svg></div>
       <div class="avatar avatar-a">A</div>
       <div class="profile-name">Alicia</div>
       <div class="profile-sub">Objectif forme</div>
     </div>
   </div>
 
-  <a href="calories.html" id="btn-go" class="btn-main" style="pointer-events:none;background:#1a1a1a;color:#444">
-    Choisir un profil pour continuer →
-  </a>
+  <div class="section-label">Mes outils</div>
+  <div id="apps-grid" class="apps-grid">
+    <a href="calories.html" id="app-calories" class="app-card disabled">
+      <div class="app-icon app-icon-green">🔥</div>
+      <div class="app-name">Calories</div>
+      <div class="app-desc">Journal alimentaire & suivi des macros</div>
+      <div class="app-arrow">→</div>
+    </a>
+    <a href="running.html" id="app-running" class="app-card disabled">
+      <div class="app-icon app-icon-blue">🏃</div>
+      <div class="app-name">Running</div>
+      <div class="app-desc">Séances, stats & progression</div>
+      <div class="app-arrow">→</div>
+    </a>
+  </div>
+  <p class="no-profile-msg" id="no-profile-msg">Sélectionne un profil pour accéder aux outils</p>
 
   <div class="footer">FitTrack · fait avec ❤️ et du code</div>
 </div>
@@ -134,11 +127,9 @@ function selectProfile(name){
 function activateProfile(name){
   document.querySelectorAll('.profile-card').forEach(c => c.classList.remove('active'));
   document.getElementById('card-' + name).classList.add('active');
-  const btn = document.getElementById('btn-go');
-  btn.textContent = 'Accéder au compteur →';
-  btn.style.background = '#00FF87';
-  btn.style.color = '#080808';
-  btn.style.pointerEvents = 'auto';
+  document.getElementById('app-calories').classList.remove('disabled');
+  document.getElementById('app-running').classList.remove('disabled');
+  document.getElementById('no-profile-msg').style.display = 'none';
 }
 </script>
 </body>
