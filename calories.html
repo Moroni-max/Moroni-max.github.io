@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;padding:1rem;max-width:600px;margin:0 auto}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
-.back{display:flex;align-items:center;gap:6px;color:#555;font-size:13px;text-decoration:none;cursor:pointer}
+.back{display:flex;align-items:center;gap:6px;color:#555;font-size:13px;text-decoration:none}
 .back:hover{color:#f0f0f0}
 .logo-text{font-size:16px;font-weight:900;letter-spacing:-0.5px}
 .logo-text span{color:#00FF87}
@@ -51,13 +51,13 @@ input:focus,select:focus{outline:none;border-color:#00FF87}
 .entry:last-child{border-bottom:none}
 .entry-name{flex:1;font-weight:500}
 .entry-meta{color:#444;font-size:11px;margin-left:6px}
-.entry-kcal{font-weight:700;margin:0 10px;color:#f0f0f0}
+.entry-kcal{font-weight:700;margin:0 10px}
 .del-btn{background:none;border:none;cursor:pointer;color:#333;font-size:14px;padding:2px 6px;border-radius:4px}
 .del-btn:hover{color:#E24B4A;background:rgba(226,75,74,0.1)}
 .no-result{padding:10px 12px;font-size:13px;color:#444}
 .chart-wrap{height:160px;margin-top:8px}
 .sel-name-box{background:#0d0d0d;border:0.5px solid #222;border-radius:8px;padding:10px 12px;margin-bottom:10px}
-.sel-name-text{font-weight:600;font-size:13px;color:#f0f0f0;margin-bottom:2px}
+.sel-name-text{font-weight:600;font-size:13px;margin-bottom:2px}
 .sel-macros{font-size:12px;color:#555}
 .no-profile{text-align:center;padding:3rem 1rem}
 .no-profile h2{font-size:20px;font-weight:700;margin-bottom:8px}
@@ -81,7 +81,6 @@ input:focus,select:focus{outline:none;border-color:#00FF87}
 
 <div id="app" style="display:none">
   <div class="metric-grid" id="cal-metrics"></div>
-
   <div class="card">
     <p class="section-title">Ajouter un aliment</p>
     <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:12px">
@@ -133,12 +132,16 @@ input:focus,select:focus{outline:none;border-color:#00FF87}
 
 <script>
 const DB=[
+  // PAINS & VIENNOISERIES
   {n:"Pain de mie",k:265,p:8,portions:[{l:"1 tranche",g:30},{l:"2 tranches",g:60}]},
   {n:"Pain brioché tranche industrielle",k:340,p:7,portions:[{l:"1 tranche",g:35},{l:"2 tranches",g:70}]},
   {n:"Brioche tranche industrielle",k:370,p:8,portions:[{l:"1 tranche",g:40}]},
   {n:"Pain complet",k:247,p:9,portions:[{l:"1 tranche",g:35}]},
   {n:"Baguette",k:275,p:9,portions:[{l:"1 portion",g:60},{l:"1/2 baguette",g:125}]},
   {n:"Madeleine industrielle",k:430,p:6,portions:[{l:"1 madeleine",g:30},{l:"2 madeleines",g:60}]},
+  {n:"Biscuit Lu Petit Beurre",k:440,p:6,portions:[{l:"1 biscuit",g:8},{l:"4 biscuits",g:32}]},
+  {n:"Biscuit gateau sec",k:450,p:7,portions:[{l:"1 biscuit",g:15},{l:"3 biscuits",g:45}]},
+  // FECULENTS
   {n:"Frites maison",k:312,p:4,portions:[{l:"1 portion",g:150},{l:"petite portion",g:100}]},
   {n:"Frites surgelees au four",k:190,p:3,portions:[{l:"1 portion",g:150}]},
   {n:"Pomme de terre bouillie",k:86,p:2,portions:[{l:"1 pomme de terre",g:150},{l:"2 pommes de terre",g:300}]},
@@ -154,6 +157,7 @@ const DB=[
   {n:"Flocons avoine",k:370,p:13,portions:[{l:"1 portion 50g",g:50},{l:"1 portion 80g",g:80}]},
   {n:"Lentilles cuites",k:116,p:9,portions:[{l:"1 portion 150g",g:150}]},
   {n:"Pois chiches cuits",k:164,p:9,portions:[{l:"1 portion 150g",g:150}]},
+  // PRODUITS LAITIERS & OEUFS
   {n:"Skyr nature",k:65,p:11,portions:[{l:"1 pot 150g",g:150},{l:"1 pot 200g",g:200}]},
   {n:"Skyr Siggys aux fruits",k:80,p:9,portions:[{l:"1 pot 140g",g:140}]},
   {n:"Yaourt nature",k:60,p:4,portions:[{l:"1 pot",g:125}]},
@@ -162,14 +166,18 @@ const DB=[
   {n:"Fromage frais nature",k:98,p:7,portions:[{l:"1 pot 100g",g:100},{l:"2 cs",g:60}]},
   {n:"Gouda",k:356,p:25,portions:[{l:"1 tranche",g:25},{l:"2 tranches",g:50}]},
   {n:"Emmental",k:382,p:28,portions:[{l:"1 tranche",g:25}]},
+  {n:"Comte",k:413,p:27,portions:[{l:"1 tranche",g:25},{l:"2 tranches",g:50},{l:"1 portion 30g",g:30}]},
   {n:"Lait demi-ecreme",k:47,p:3,portions:[{l:"1 verre 200ml",g:200}]},
   {n:"Oeuf entier",k:155,p:13,portions:[{l:"1 oeuf moyen",g:55},{l:"2 oeufs",g:110}]},
   {n:"Oeufs brouilles beurre",k:170,p:12,portions:[{l:"2 oeufs",g:120},{l:"3 oeufs",g:180}]},
   {n:"Blanc oeuf",k:52,p:11,portions:[{l:"1 blanc",g:35}]},
+  // VIANDES & POISSONS
   {n:"Poulet grille",k:165,p:31,portions:[{l:"1 blanc 150g",g:150},{l:"1 filet 120g",g:120}]},
   {n:"Pilon de poulet",k:175,p:22,portions:[{l:"1 pilon",g:90},{l:"2 pilons",g:180}]},
   {n:"Aile de poulet",k:203,p:18,portions:[{l:"1 aile",g:60},{l:"2 ailes",g:120}]},
   {n:"Dinde",k:135,p:29,portions:[{l:"1 tranche",g:80}]},
+  {n:"Boeuf steak grille",k:172,p:28,portions:[{l:"1 steak 150g",g:150},{l:"1 steak 200g",g:200}]},
+  {n:"Boeuf hache cuit",k:215,p:26,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
   {n:"Steak hache 5 pourcent",k:120,p:21,portions:[{l:"1 steak 100g",g:100},{l:"1 steak 130g",g:130}]},
   {n:"Steak hache 15 pourcent",k:195,p:18,portions:[{l:"1 steak 100g",g:100},{l:"1 steak 130g",g:130}]},
   {n:"Thon en boite",k:116,p:26,portions:[{l:"1/2 boite 70g",g:70},{l:"1 boite 140g",g:140}]},
@@ -177,10 +185,13 @@ const DB=[
   {n:"Saumon fume",k:172,p:25,portions:[{l:"1 tranche 30g",g:30},{l:"2 tranches",g:60},{l:"1 portion 80g",g:80}]},
   {n:"Crevettes surgelees cuites",k:99,p:21,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
   {n:"Fruits de mer melange",k:80,p:15,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
+  // PLATS COMPOSES
+  {n:"Hachis parmentier Picard boeuf",k:112,p:6,portions:[{l:"1 portion 300g",g:300},{l:"1 portion 400g",g:400}]},
   {n:"Burger maison pain brioché steak mayo gouda",k:280,p:18,portions:[{l:"1 burger complet",g:300}]},
   {n:"Bokit poulet sauce chien",k:420,p:22,portions:[{l:"1 bokit",g:280}]},
   {n:"Riz creme fraiche fruits de mer",k:155,p:9,portions:[{l:"1 portion 250g",g:250}]},
   {n:"Poelee legumes surgelee",k:55,p:3,portions:[{l:"1 portion 200g",g:200},{l:"1 portion 300g",g:300}]},
+  // LEGUMES
   {n:"Tomate",k:18,p:1,portions:[{l:"1 tomate",g:120},{l:"2 tomates",g:240}]},
   {n:"Salade verte",k:15,p:1,portions:[{l:"1 portion",g:50}]},
   {n:"Courgette",k:17,p:1,portions:[{l:"1 courgette",g:200}]},
@@ -195,27 +206,35 @@ const DB=[
   {n:"Avocat",k:160,p:2,portions:[{l:"1/2 avocat",g:75},{l:"1 avocat",g:150}]},
   {n:"Mais en boite",k:86,p:3,portions:[{l:"1 portion 80g",g:80}]},
   {n:"Petits pois",k:81,p:5,portions:[{l:"1 portion 100g",g:100}]},
+  // FRUITS
   {n:"Banane",k:89,p:1,portions:[{l:"1 banane moyenne",g:120},{l:"1 grande",g:150}]},
   {n:"Pomme",k:52,p:0,portions:[{l:"1 pomme",g:150}]},
   {n:"Orange",k:47,p:1,portions:[{l:"1 orange",g:180}]},
+  {n:"Peche",k:42,p:1,portions:[{l:"1 peche",g:150},{l:"1 grosse peche",g:200}]},
   {n:"Fraises",k:32,p:1,portions:[{l:"1 portion 150g",g:150}]},
   {n:"Myrtilles",k:57,p:1,portions:[{l:"1 portion 100g",g:100}]},
+  {n:"Compote pomme nature",k:48,p:0,portions:[{l:"1 gourde 90g",g:90},{l:"1 pot 100g",g:100}]},
+  {n:"Compote pomme fruits rouges",k:52,p:0,portions:[{l:"1 gourde 90g",g:90},{l:"1 pot 100g",g:100}]},
   {n:"Raisin",k:69,p:1,portions:[{l:"1 grappe 150g",g:150}]},
   {n:"Mangue",k:60,p:1,portions:[{l:"1/2 mangue",g:150}]},
   {n:"Ananas",k:50,p:0,portions:[{l:"1 tranche",g:100}]},
   {n:"Kiwi",k:61,p:1,portions:[{l:"1 kiwi",g:70}]},
   {n:"Poire",k:57,p:0,portions:[{l:"1 poire",g:160}]},
   {n:"Pasteque",k:30,p:1,portions:[{l:"1 tranche",g:200}]},
+  // SNACKS & OLEAGINEUX
   {n:"Amandes nature",k:579,p:21,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Amandes grillees salees",k:597,p:21,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Noix de cajou grillees salees",k:574,p:15,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Noix",k:654,p:15,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Beurre de cacahuete",k:598,p:25,portions:[{l:"1 cs",g:16}]},
+  // BOISSONS & CAFES
   {n:"Espresso",k:2,p:0,portions:[{l:"1 tasse 30ml",g:30}]},
   {n:"Cafe allonge",k:5,p:0,portions:[{l:"1 tasse 200ml",g:200}]},
   {n:"Cafe noir sans sucre",k:2,p:0,portions:[{l:"1 tasse",g:150}]},
+  // PROTEINES & COMPLEMENTS
   {n:"Whey isolat",k:370,p:88,portions:[{l:"1 dose 30g",g:30}]},
   {n:"Creatine",k:0,p:0,portions:[{l:"1 dose 5g",g:5}]},
+  // CONDIMENTS & MATIERES GRASSES
   {n:"Huile olive",k:884,p:0,portions:[{l:"1 cs",g:10}]},
   {n:"Mayonnaise",k:680,p:1,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
   {n:"Beurre",k:717,p:1,portions:[{l:"1 noix",g:10}]},
@@ -228,23 +247,16 @@ const PROFILES={
 };
 
 const user=localStorage.getItem('fittrack_user');
-
-if(!user){
-  document.getElementById('no-profile').style.display='block';
-} else {
-  document.getElementById('app').style.display='block';
-  init(user);
-}
+if(!user){document.getElementById('no-profile').style.display='block';}
+else{document.getElementById('app').style.display='block';init(user);}
 
 function init(user){
   const profile=PROFILES[user];
   const storageKey='cal_entries_'+user;
   const goalKey='cal_goal_'+user;
 
-  // Badge utilisateur
-  const initial=profile.name[0];
   document.getElementById('user-badge').innerHTML=`
-    <div class="avatar ${profile.avatarClass}">${initial}</div>
+    <div class="avatar ${profile.avatarClass}">${profile.name[0]}</div>
     <span class="username">${profile.name}</span>`;
 
   let entries=JSON.parse(localStorage.getItem(storageKey)||'[]');
