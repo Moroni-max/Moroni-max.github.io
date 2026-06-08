@@ -1,142 +1,145 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Mon site</title>
-  <style>
-    * { margin: 0; padding: 0; }
-    body { background: #070714; overflow: hidden; }
-    canvas { display: block; }
-    #texte {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      pointer-events: none;
-    }
-    h1 {
-      font-family: sans-serif;
-      font-size: 72px;
-      color: white;
-      font-weight: 900;
-      letter-spacing: -2px;
-    }
-    p {
-      font-family: sans-serif;
-      font-size: 20px;
-      color: rgba(150, 200, 255, 0.7);
-      margin-top: 16px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:100vh;overflow-x:hidden}
+
+/* FOND ANIMÉ */
+.bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,255,135,0.05) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(0,255,135,0.03) 0%,transparent 50%)}
+
+/* CONTENU */
+.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:3rem 1.5rem}
+
+/* LOGO */
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:3rem}
+.logo-icon{width:36px;height:36px;background:#00FF87;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:20px;height:20px;fill:#080808}
+.logo-text{font-size:20px;font-weight:900;letter-spacing:-0.5px}
+.logo-text span{color:#00FF87}
+
+/* HERO */
+.hero{margin-bottom:3rem}
+.badge{display:inline-block;background:rgba(0,255,135,0.1);color:#00FF87;border:1px solid rgba(0,255,135,0.2);border-radius:99px;font-size:12px;font-weight:600;padding:4px 14px;letter-spacing:1px;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-size:42px;font-weight:900;line-height:1.1;letter-spacing:-1.5px;margin-bottom:1rem}
+.hero h1 span{color:#00FF87}
+.hero p{font-size:15px;color:#888;line-height:1.7;max-width:380px}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:3rem}
+.feature{background:#111;border:0.5px solid #222;border-radius:12px;padding:14px;display:flex;align-items:flex-start;gap:10px}
+.feature-icon{width:32px;height:32px;background:rgba(0,255,135,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.feature-text p{font-size:13px;font-weight:600;margin-bottom:2px}
+.feature-text span{font-size:11px;color:#555}
+
+/* PROFILS */
+.section-label{font-size:11px;font-weight:600;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.profiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.profile-card{background:#111;border:1.5px solid #222;border-radius:16px;padding:1.2rem;cursor:pointer;transition:all 0.2s;text-align:center;position:relative}
+.profile-card:hover{border-color:#00FF87;background:#0a0a0a}
+.profile-card.active{border-color:#00FF87;background:rgba(0,255,135,0.05)}
+.profile-card.active .check{display:flex}
+.check{display:none;position:absolute;top:10px;right:10px;width:18px;height:18px;background:#00FF87;border-radius:50%;align-items:center;justify-content:center}
+.check svg{width:10px;height:10px;fill:#080808}
+.avatar{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
+.avatar-k{background:rgba(0,255,135,0.15);color:#00FF87}
+.avatar-a{background:rgba(255,100,150,0.15);color:#ff6496}
+.profile-name{font-size:15px;font-weight:700;margin-bottom:2px}
+.profile-sub{font-size:11px;color:#555}
+
+/* BOUTON */
+.btn-main{display:block;width:100%;padding:16px;background:#00FF87;color:#080808;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:-0.3px;transition:all 0.2s;text-align:center;text-decoration:none}
+.btn-main:hover{background:#00e87a;transform:translateY(-1px)}
+.btn-main:active{transform:translateY(0)}
+.btn-main:disabled{background:#1a1a1a;color:#444;cursor:not-allowed;transform:none}
+
+/* FOOTER */
+.footer{text-align:center;margin-top:3rem;font-size:12px;color:#333}
+</style>
 </head>
 <body>
+<div class="bg"></div>
+<div class="wrap">
 
-<canvas id="canvas"></canvas>
-<div id="texte">
-  <h1>Bonjour le monde</h1>
-  <p>Clique et bouge ta souris</p>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </div>
+    <div class="logo-text">Fit<span>Track</span></div>
+  </div>
+
+  <div class="hero">
+    <div class="badge">⚡ Ton espace fitness</div>
+    <h1>Suis ta<br><span>nutrition</span><br>chaque jour.</h1>
+    <p>Compte tes calories, suis tes protéines et atteins tes objectifs avec un tracker simple et efficace.</p>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">🔥</div>
+      <div class="feature-text"><p>Calories</p><span>Suivi journalier</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💪</div>
+      <div class="feature-text"><p>Protéines</p><span>Objectif quotidien</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <div class="feature-text"><p>Historique</p><span>7 derniers jours</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🍽️</div>
+      <div class="feature-text"><p>80+ aliments</p><span>Base intégrée</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Choisir mon profil</div>
+  <div class="profiles">
+    <div class="profile-card" id="card-kamal" onclick="selectProfile('kamal')">
+      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6"/></svg></div>
+      <div class="avatar avatar-k">K</div>
+      <div class="profile-name">Kamal</div>
+      <div class="profile-sub">Objectif : 75 kg</div>
+    </div>
+    <div class="profile-card" id="card-alicia" onclick="selectProfile('alicia')">
+      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6"/></svg></div>
+      <div class="avatar avatar-a">A</div>
+      <div class="profile-name">Alicia</div>
+      <div class="profile-sub">Objectif forme</div>
+    </div>
+  </div>
+
+  <a href="calories.html" id="btn-go" class="btn-main" style="pointer-events:none;background:#1a1a1a;color:#444">
+    Choisir un profil pour continuer →
+  </a>
+
+  <div class="footer">FitTrack · fait avec ❤️ et du code</div>
 </div>
 
 <script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let selected = localStorage.getItem('fittrack_user') || null;
+if(selected) activateProfile(selected);
 
-const souris = { x: null, y: null };
-const NB_POINTS = 120;
-const DISTANCE_MAX = 150;
-const RAYON_SOURIS = 200;
-
-let points = [];
-for (let i = 0; i < NB_POINTS; i++) {
-  points.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 1.2,
-    vy: (Math.random() - 0.5) * 1.2,
-  });
+function selectProfile(name){
+  selected = name;
+  localStorage.setItem('fittrack_user', name);
+  activateProfile(name);
 }
 
-window.addEventListener('mousemove', (e) => {
-  souris.x = e.clientX;
-  souris.y = e.clientY;
-});
-
-window.addEventListener('mouseleave', () => {
-  souris.x = null;
-  souris.y = null;
-});
-
-window.addEventListener('click', (e) => {
-  for (let i = 0; i < 30; i++) {
-    const angle = (Math.PI * 2 / 30) * i;
-    const force = Math.random() * 8 + 3;
-    points.push({
-      x: e.clientX,
-      y: e.clientY,
-      vx: Math.cos(angle) * force,
-      vy: Math.sin(angle) * force,
-    });
-  }
-  if (points.length > 300) {
-    points = points.slice(points.length - 300);
-  }
-});
-
-function dessinerLigne(p1, p2, opacite) {
-  ctx.beginPath();
-  ctx.moveTo(p1.x, p1.y);
-  ctx.lineTo(p2.x, p2.y);
-  ctx.strokeStyle = `rgba(100, 180, 255, ${opacite})`;
-  ctx.lineWidth = 0.8;
-  ctx.stroke();
+function activateProfile(name){
+  document.querySelectorAll('.profile-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-' + name).classList.add('active');
+  const btn = document.getElementById('btn-go');
+  btn.textContent = 'Accéder au compteur →';
+  btn.style.background = '#00FF87';
+  btn.style.color = '#080808';
+  btn.style.pointerEvents = 'auto';
 }
-
-function animer() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  points.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-    if (souris.x !== null) {
-      const dx = souris.x - p.x;
-      const dy = souris.y - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < RAYON_SOURIS) {
-        p.x += dx * 0.03;
-        p.y += dy * 0.03;
-      }
-    }
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(150, 200, 255, 0.8)';
-    ctx.fill();
-  });
-
-  for (let i = 0; i < points.length; i++) {
-    for (let j = i + 1; j < points.length; j++) {
-      const dx = points[i].x - points[j].x;
-      const dy = points[i].y - points[j].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < DISTANCE_MAX) {
-        const opacite = 1 - dist / DISTANCE_MAX;
-        dessinerLigne(points[i], points[j], opacite);
-      }
-    }
-  }
-
-  requestAnimationFrame(animer);
-}
-
-animer();
 </script>
 </body>
 </html>
