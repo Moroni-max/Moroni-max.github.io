@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack – Running</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;padding:1rem;max-width:700px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
+.back{color:#555;font-size:13px;text-decoration:none}.back:hover{color:#f0f0f0}
+.logo-text{font-size:16px;font-weight:900;letter-spacing:-0.5px}.logo-text span{color:#00FF87}
+.user-badge{display:flex;align-items:center;gap:8px}
+.avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.avatar-kamal{background:rgba(0,255,135,0.15);color:#00FF87}
+.avatar-alicia{background:rgba(255,100,150,0.15);color:#ff6496}
+.username{font-size:13px;font-weight:600}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat-card{background:#111;border:0.5px solid #1a1a1a;border-radius:10px;padding:10px 12px}
+.stat-label{font-size:11px;color:#555;margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.stat-val{font-size:18px;font-weight:700}
+.stat-sub{font-size:11px;color:#444;margin-top:2px}
+
+.card{background:#111;border:0.5px solid #1a1a1a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.section-title{font-weight:700;font-size:14px;margin-bottom:12px;letter-spacing:-0.3px}
+label{display:block;font-size:11px;color:#555;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+input,select,textarea{width:100%;padding:8px 10px;border:0.5px solid #222;border-radius:8px;font-size:13px;background:#0d0d0d;color:#f0f0f0;font-family:'Inter',sans-serif}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#00FF87}
+textarea{resize:vertical;min-height:60px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.btn-primary{width:100%;padding:12px;background:#00FF87;color:#080808;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-top:4px}
+.btn-primary:hover{background:#00e87a}
+
+.preview-box{background:#0d0d0d;border:0.5px solid #222;border-radius:8px;padding:10px 12px;margin-bottom:10px;display:none}
+.preview-rythme{font-size:20px;font-weight:700;color:#00FF87}
+.preview-label{font-size:11px;color:#555;margin-bottom:4px}
+
+.session-list{display:flex;flex-direction:column;gap:8px}
+.session-card{background:#0d0d0d;border:0.5px solid #1a1a1a;border-radius:10px;padding:12px 14px;position:relative}
+.session-card:hover{border-color:#222}
+.session-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.session-date{font-size:12px;color:#555;font-weight:600}
+.session-type{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
+.type-running{background:rgba(0,255,135,0.1);color:#00FF87}
+.type-trail{background:rgba(100,150,255,0.1);color:#6496ff}
+.type-autre{background:rgba(255,165,0,0.1);color:#ffa500}
+.session-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.metric-mini{text-align:center}
+.metric-mini-val{font-size:15px;font-weight:700}
+.metric-mini-label{font-size:10px;color:#444;margin-top:1px}
+.session-comment{font-size:12px;color:#555;font-style:italic;border-top:0.5px solid #1a1a1a;padding-top:8px;margin-top:4px}
+.del-btn{background:none;border:none;cursor:pointer;color:#333;font-size:13px;padding:2px 6px;border-radius:4px;position:absolute;top:10px;right:10px}
+.del-btn:hover{color:#E24B4A;background:rgba(226,75,74,0.1)}
+.zone-badge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;background:rgba(255,165,0,0.1);color:#ffa500}
+.effort-badge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
+.effort-easy{background:rgba(0,255,135,0.1);color:#00FF87}
+.effort-mod{background:rgba(255,165,0,0.1);color:#ffa500}
+.effort-hard{background:rgba(226,75,74,0.1);color:#E24B4A}
+.empty{text-align:center;padding:2rem;color:#444;font-size:13px}
+
+.no-profile{text-align:center;padding:3rem 1rem}
+.no-profile h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.no-profile p{color:#555;font-size:14px;margin-bottom:1.5rem}
+.btn-home{display:inline-block;padding:12px 24px;background:#00FF87;color:#080808;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back">← Accueil</a>
+  <div class="logo-text">Fit<span>Track</span></div>
+  <div class="user-badge" id="user-badge"></div>
+</div>
+
+<div id="no-profile" style="display:none" class="no-profile">
+  <h2>Aucun profil sélectionné</h2>
+  <p>Retourne à l'accueil pour choisir ton profil.</p>
+  <a href="index.html" class="btn-home">Choisir mon profil →</a>
+</div>
+
+<div id="app" style="display:none">
+
+  <div class="stats-grid" id="stats-grid"></div>
+
+  <div class="card">
+    <p class="section-title">Ajouter une séance</p>
+
+    <div class="form-grid">
+      <div><label>Date</label><input type="date" id="s-date"></div>
+      <div><label>Type</label>
+        <select id="s-type">
+          <option>Running</option>
+          <option>Trail</option>
+          <option>Autre</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div><label>Lieu</label><input type="text" id="s-lieu" placeholder="Paris, Sartrouville..."></div>
+      <div><label>Distance (km)</label><input type="number" id="s-dist" placeholder="5.2" step="0.01" oninput="calcRythme()"></div>
+    </div>
+
+    <div class="form-grid-3">
+      <div><label>Durée (hh:mm:ss)</label><input type="text" id="s-duree" placeholder="00:30:00" oninput="calcRythme()"></div>
+      <div><label>FC moy (bpm)</label><input type="number" id="s-fcmoy" placeholder="160"></div>
+      <div><label>FC max (bpm)</label><input type="number" id="s-fcmax" placeholder="180"></div>
+    </div>
+
+    <div class="form-grid-3">
+      <div><label>Calories</label><input type="number" id="s-cal" placeholder="300"></div>
+      <div><label>Effort (1-10)</label><input type="number" id="s-effort" placeholder="7" min="1" max="10"></div>
+      <div><label>Zone FC dom.</label>
+        <select id="s-zone">
+          <option>Zone 1</option>
+          <option>Zone 2</option>
+          <option>Zone 3</option>
+          <option selected>Zone 4</option>
+          <option>Zone 4-5</option>
+          <option>Zone 5</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="preview-rythme" class="preview-box">
+      <div class="preview-label">Allure calculée</div>
+      <div class="preview-rythme" id="rythme-val">--</div>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label>Commentaire</label>
+      <textarea id="s-comment" placeholder="Bonne séance, FC encore haute..."></textarea>
+    </div>
+
+    <button class="btn-primary" onclick="addSession()">+ Enregistrer la séance</button>
+  </div>
+
+  <div class="card">
+    <p class="section-title">Historique des séances</p>
+    <div class="session-list" id="session-list"></div>
+  </div>
+
+</div>
+
+<script>
+const PROFILES={
+  kamal:{name:'Kamal',avatarClass:'avatar-kamal'},
+  alicia:{name:'Alicia',avatarClass:'avatar-alicia'}
+};
+
+const user=localStorage.getItem('fittrack_user');
+
+if(!user){
+  document.getElementById('no-profile').style.display='block';
+} else {
+  document.getElementById('app').style.display='block';
+  init(user);
+}
+
+function init(user){
+  const profile=PROFILES[user];
+  const storageKey='run_sessions_'+user;
+
+  document.getElementById('user-badge').innerHTML=`
+    <div class="avatar ${profile.avatarClass}">${profile.name[0]}</div>
+    <span class="username">${profile.name}</span>`;
+
+  document.getElementById('s-date').value=today();
+
+  let sessions=JSON.parse(localStorage.getItem(storageKey)||'[]');
+
+  function today(){return new Date().toISOString().slice(0,10);}
+
+  function save(){localStorage.setItem(storageKey,JSON.stringify(sessions));}
+
+  function parseDuree(str){
+    const parts=str.split(':').map(Number);
+    if(parts.length===3) return parts[0]*3600+parts[1]*60+parts[2];
+    if(parts.length===2) return parts[0]*60+parts[1];
+    return 0;
+  }
+
+  function formatRythme(secPerKm){
+    const m=Math.floor(secPerKm/60);
+    const s=Math.round(secPerKm%60);
+    return m+"'"+String(s).padStart(2,'0')+'"';
+  }
+
+  window.calcRythme=function(){
+    const dist=parseFloat(document.getElementById('s-dist').value)||0;
+    const dureeStr=document.getElementById('s-duree').value;
+    const totalSec=parseDuree(dureeStr);
+    const box=document.getElementById('preview-rythme');
+    if(dist>0&&totalSec>0){
+      const secPerKm=totalSec/dist;
+      document.getElementById('rythme-val').textContent=formatRythme(secPerKm)+' /km';
+      box.style.display='block';
+    } else {
+      box.style.display='none';
+    }
+  };
+
+  window.addSession=function(){
+    const dist=parseFloat(document.getElementById('s-dist').value)||0;
+    const dureeStr=document.getElementById('s-duree').value;
+    const totalSec=parseDuree(dureeStr);
+    const rythme=dist>0&&totalSec>0?formatRythme(totalSec/dist):'—';
+
+    const session={
+      id:Date.now(),
+      date:document.getElementById('s-date').value,
+      type:document.getElementById('s-type').value,
+      lieu:document.getElementById('s-lieu').value||'—',
+      dist:dist,
+      duree:dureeStr||'—',
+      rythme,
+      fcmoy:parseInt(document.getElementById('s-fcmoy').value)||0,
+      fcmax:parseInt(document.getElementById('s-fcmax').value)||0,
+      cal:parseInt(document.getElementById('s-cal').value)||0,
+      effort:parseInt(document.getElementById('s-effort').value)||0,
+      zone:document.getElementById('s-zone').value,
+      comment:document.getElementById('s-comment').value||''
+    };
+
+    if(!session.date){alert('Saisis une date.');return;}
+    if(!session.dist){alert('Saisis une distance.');return;}
+
+    sessions.unshift(session);
+    save();
+
+    // Reset
+    ['s-dist','s-duree','s-fcmoy','s-fcmax','s-cal','s-effort','s-lieu','s-comment'].forEach(id=>{
+      document.getElementById(id).value='';
+    });
+    document.getElementById('s-date').value=today();
+    document.getElementById('preview-rythme').style.display='none';
+
+    renderAll();
+  };
+
+  window.deleteSession=function(id){
+    if(!confirm('Supprimer cette séance ?'))return;
+    sessions=sessions.filter(s=>s.id!==id);
+    save();
+    renderAll();
+  };
+
+  function effortClass(e){
+    if(e<=4)return 'effort-easy';
+    if(e<=6)return 'effort-mod';
+    return 'effort-hard';
+  }
+
+  function typeClass(t){
+    if(t==='Running')return 'type-running';
+    if(t==='Trail')return 'type-trail';
+    return 'type-autre';
+  }
+
+  function renderStats(){
+    const nb=sessions.length;
+    const km=sessions.reduce((s,r)=>s+r.dist,0);
+    const cal=sessions.reduce((s,r)=>s+r.cal,0);
+    const totalSec=sessions.reduce((s,r)=>s+parseDuree(r.duree),0);
+    const h=Math.floor(totalSec/3600);
+    const m=Math.floor((totalSec%3600)/60);
+    const dureeStr=nb?h+'h'+String(m).padStart(2,'0'):'—';
+    const bestRythme=sessions.filter(s=>s.rythme!=='—').map(s=>{
+      const parts=s.rythme.replace('"','').split("'");
+      return parseInt(parts[0])*60+parseInt(parts[1]);
+    });
+    const best=bestRythme.length?formatRythme(Math.min(...bestRythme)):'—';
+    const fcMoys=sessions.filter(s=>s.fcmoy>0).map(s=>s.fcmoy);
+    const fcMoyMoy=fcMoys.length?Math.round(fcMoys.reduce((a,b)=>a+b,0)/fcMoys.length):0;
+
+    document.getElementById('stats-grid').innerHTML=`
+      <div class="stat-card"><div class="stat-label">Séances</div><div class="stat-val" style="color:#00FF87">${nb}</div><div class="stat-sub">total</div></div>
+      <div class="stat-card"><div class="stat-label">Distance</div><div class="stat-val">${km.toFixed(1)}<span style="font-size:12px;color:#555"> km</span></div><div class="stat-sub">total</div></div>
+      <div class="stat-card"><div class="stat-label">Durée totale</div><div class="stat-val">${dureeStr}</div><div class="stat-sub">cumulé</div></div>
+      <div class="stat-card"><div class="stat-label">Meilleure allure</div><div class="stat-val" style="color:#00FF87">${best}</div><div class="stat-sub">/km</div></div>
+      <div class="stat-card"><div class="stat-label">FC moy globale</div><div class="stat-val">${fcMoyMoy||'—'}<span style="font-size:12px;color:#555">${fcMoyMoy?' bpm':''}</span></div><div class="stat-sub">moyenne</div></div>
+      <div class="stat-card"><div class="stat-label">Calories brûlées</div><div class="stat-val">${cal.toLocaleString()}<span style="font-size:12px;color:#555"> kcal</span></div><div class="stat-sub">total</div></div>
+    `;
+  }
+
+  function renderList(){
+    const el=document.getElementById('session-list');
+    if(!sessions.length){
+      el.innerHTML='<div class="empty">Aucune séance enregistrée.<br>Ajoute ta première sortie !</div>';
+      return;
+    }
+    el.innerHTML=sessions.map(s=>`
+      <div class="session-card">
+        <button class="del-btn" onclick="deleteSession(${s.id})">✕</button>
+        <div class="session-top">
+          <span class="session-date">${s.date.split('-').reverse().join('/')} · ${s.lieu}</span>
+          <span class="session-type ${typeClass(s.type)}">${s.type}</span>
+        </div>
+        <div class="session-metrics">
+          <div class="metric-mini">
+            <div class="metric-mini-val" style="color:#00FF87">${s.dist} km</div>
+            <div class="metric-mini-label">Distance</div>
+          </div>
+          <div class="metric-mini">
+            <div class="metric-mini-val">${s.duree}</div>
+            <div class="metric-mini-label">Durée</div>
+          </div>
+          <div class="metric-mini">
+            <div class="metric-mini-val" style="color:#00FF87">${s.rythme}</div>
+            <div class="metric-mini-label">Allure</div>
+          </div>
+          <div class="metric-mini">
+            <div class="metric-mini-val">${s.fcmoy||'—'}<span style="font-size:11px;color:#444">${s.fcmoy?' bpm':''}</span></div>
+            <div class="metric-mini-label">FC moy</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${s.comment?'8px':'0'}">
+          ${s.effort?`<span class="effort-badge ${effortClass(s.effort)}">${s.effort}/10 effort</span>`:''}
+          ${s.zone?`<span class="zone-badge">${s.zone}</span>`:''}
+          ${s.cal?`<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.05);color:#888">${s.cal} kcal</span>`:''}
+          ${s.fcmax?`<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.05);color:#888">FC max ${s.fcmax} bpm</span>`:''}
+        </div>
+        ${s.comment?`<div class="session-comment">"${s.comment}"</div>`:''}
+      </div>
+    `).join('');
+  }
+
+  function renderAll(){renderStats();renderList();}
+  renderAll();
+}
+</script>
+</body>
+</html>
