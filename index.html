@@ -6,7 +6,6 @@
 <title>FitTrack</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:100vh;overflow-x:hidden}
 .bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,255,135,0.05) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(0,255,135,0.03) 0%,transparent 50%)}
@@ -66,14 +65,14 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
   <div class="hero">
     <div class="badge">⚡ Ton espace fitness</div>
     <h1>Suis ta<br><span>nutrition</span><br>chaque jour.</h1>
-    <p>Compte tes calories, suis tes séances de course et explore les cuisines du monde.</p>
+    <p>Calories, running, recettes du monde et stats perso — tout en un.</p>
   </div>
 
   <div class="features">
     <div class="feature"><div class="feature-icon">🔥</div><div class="feature-text"><p>Calories</p><span>Suivi journalier</span></div></div>
     <div class="feature"><div class="feature-icon">🏃</div><div class="feature-text"><p>Running</p><span>Séances & stats</span></div></div>
     <div class="feature"><div class="feature-icon">🌍</div><div class="feature-text"><p>Recettes</p><span>Cuisines du monde</span></div></div>
-    <div class="feature"><div class="feature-icon">📊</div><div class="feature-text"><p>Historique</p><span>7 derniers jours</span></div></div>
+    <div class="feature"><div class="feature-icon">👤</div><div class="feature-text"><p>Profil</p><span>Stats globales</span></div></div>
   </div>
 
   <div class="section-label">Choisir mon profil</div>
@@ -97,7 +96,7 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
     <a href="calories.html" id="app-calories" class="app-card disabled">
       <div class="app-icon" style="background:rgba(0,255,135,0.1)">🔥</div>
       <div class="app-name">Calories</div>
-      <div class="app-desc">Journal alimentaire & suivi des macros</div>
+      <div class="app-desc">Journal alimentaire & macros</div>
       <div class="app-arrow">→</div>
     </a>
     <a href="running.html" id="app-running" class="app-card disabled">
@@ -109,7 +108,13 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
     <a href="recettes.html" id="app-recettes" class="app-card disabled">
       <div class="app-icon" style="background:rgba(255,165,0,0.1)">🌍</div>
       <div class="app-name">Recettes</div>
-      <div class="app-desc">54 recettes de 9 pays du monde</div>
+      <div class="app-desc">54 recettes de 9 pays</div>
+      <div class="app-arrow">→</div>
+    </a>
+    <a href="profil.html" id="app-profil" class="app-card disabled">
+      <div class="app-icon" style="background:rgba(255,100,150,0.1)">👤</div>
+      <div class="app-name">Profil</div>
+      <div class="app-desc">Stats globales & notifications</div>
       <div class="app-arrow">→</div>
     </a>
   </div>
@@ -119,22 +124,20 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
 </div>
 
 <script>
-let selected = localStorage.getItem('fittrack_user') || null;
-if(selected) activateProfile(selected);
+let selected=localStorage.getItem('fittrack_user')||null;
+if(selected)activateProfile(selected);
 
 function selectProfile(name){
-  selected = name;
-  localStorage.setItem('fittrack_user', name);
+  selected=name;
+  localStorage.setItem('fittrack_user',name);
   activateProfile(name);
 }
 
 function activateProfile(name){
-  document.querySelectorAll('.profile-card').forEach(c => c.classList.remove('active'));
-  document.getElementById('card-' + name).classList.add('active');
-  document.getElementById('app-calories').classList.remove('disabled');
-  document.getElementById('app-running').classList.remove('disabled');
-  document.getElementById('app-recettes').classList.remove('disabled');
-  document.getElementById('no-profile-msg').style.display = 'none';
+  document.querySelectorAll('.profile-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('card-'+name).classList.add('active');
+  ['app-calories','app-running','app-recettes','app-profil'].forEach(id=>document.getElementById(id).classList.remove('disabled'));
+  document.getElementById('no-profile-msg').style.display='none';
 }
 </script>
 </body>
