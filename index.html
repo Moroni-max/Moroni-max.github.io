@@ -44,8 +44,6 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
 .app-card:hover{border-color:#00FF87;background:#0a0a0a;transform:translateY(-2px)}
 .app-card.disabled{opacity:0.4;pointer-events:none}
 .app-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px}
-.app-icon-green{background:rgba(0,255,135,0.1)}
-.app-icon-blue{background:rgba(100,150,255,0.1)}
 .app-name{font-size:15px;font-weight:700;margin-bottom:4px}
 .app-desc{font-size:12px;color:#555;line-height:1.5}
 .app-arrow{position:absolute;bottom:14px;right:14px;color:#333;font-size:16px}
@@ -68,13 +66,13 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
   <div class="hero">
     <div class="badge">⚡ Ton espace fitness</div>
     <h1>Suis ta<br><span>nutrition</span><br>chaque jour.</h1>
-    <p>Compte tes calories, suis tes séances de course et atteins tes objectifs.</p>
+    <p>Compte tes calories, suis tes séances de course et explore les cuisines du monde.</p>
   </div>
 
   <div class="features">
     <div class="feature"><div class="feature-icon">🔥</div><div class="feature-text"><p>Calories</p><span>Suivi journalier</span></div></div>
     <div class="feature"><div class="feature-icon">🏃</div><div class="feature-text"><p>Running</p><span>Séances & stats</span></div></div>
-    <div class="feature"><div class="feature-icon">💪</div><div class="feature-text"><p>Protéines</p><span>Objectif quotidien</span></div></div>
+    <div class="feature"><div class="feature-icon">🌍</div><div class="feature-text"><p>Recettes</p><span>Cuisines du monde</span></div></div>
     <div class="feature"><div class="feature-icon">📊</div><div class="feature-text"><p>Historique</p><span>7 derniers jours</span></div></div>
   </div>
 
@@ -95,17 +93,23 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
   </div>
 
   <div class="section-label">Mes outils</div>
-  <div id="apps-grid" class="apps-grid">
+  <div class="apps-grid">
     <a href="calories.html" id="app-calories" class="app-card disabled">
-      <div class="app-icon app-icon-green">🔥</div>
+      <div class="app-icon" style="background:rgba(0,255,135,0.1)">🔥</div>
       <div class="app-name">Calories</div>
       <div class="app-desc">Journal alimentaire & suivi des macros</div>
       <div class="app-arrow">→</div>
     </a>
     <a href="running.html" id="app-running" class="app-card disabled">
-      <div class="app-icon app-icon-blue">🏃</div>
+      <div class="app-icon" style="background:rgba(100,150,255,0.1)">🏃</div>
       <div class="app-name">Running</div>
       <div class="app-desc">Séances, stats & progression</div>
+      <div class="app-arrow">→</div>
+    </a>
+    <a href="recettes.html" id="app-recettes" class="app-card disabled">
+      <div class="app-icon" style="background:rgba(255,165,0,0.1)">🌍</div>
+      <div class="app-name">Recettes</div>
+      <div class="app-desc">54 recettes de 9 pays du monde</div>
       <div class="app-arrow">→</div>
     </a>
   </div>
@@ -129,6 +133,7 @@ function activateProfile(name){
   document.getElementById('card-' + name).classList.add('active');
   document.getElementById('app-calories').classList.remove('disabled');
   document.getElementById('app-running').classList.remove('disabled');
+  document.getElementById('app-recettes').classList.remove('disabled');
   document.getElementById('no-profile-msg').style.display = 'none';
 }
 </script>
