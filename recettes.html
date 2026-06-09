@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack – Recettes du monde</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;padding:1rem;max-width:700px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
+.back{color:#555;font-size:13px;text-decoration:none}.back:hover{color:#f0f0f0}
+.logo-text{font-size:16px;font-weight:900;letter-spacing:-0.5px}.logo-text span{color:#00FF87}
+
+.hero{margin-bottom:1.5rem}
+.hero h1{font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:6px}
+.hero h1 span{color:#00FF87}
+.hero p{font-size:14px;color:#555}
+
+/* PAYS */
+.pays-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.pays-btn{padding:8px 16px;border:1.5px solid #222;border-radius:99px;background:transparent;color:#888;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.pays-btn:hover{border-color:#444;color:#f0f0f0}
+.pays-btn.active{border-color:#00FF87;color:#00FF87;background:rgba(0,255,135,0.05)}
+
+/* RECETTES */
+.recettes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.recettes-grid{grid-template-columns:1fr}}
+.recette-card{background:#111;border:0.5px solid #1a1a1a;border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s}
+.recette-card:hover{border-color:#333;background:#131313}
+.recette-emoji{font-size:28px;margin-bottom:8px}
+.recette-nom{font-size:14px;font-weight:700;margin-bottom:4px}
+.recette-desc{font-size:12px;color:#555;line-height:1.5;margin-bottom:8px}
+.recette-meta{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
+.tag-kcal{background:rgba(0,255,135,0.1);color:#00FF87}
+.tag-time{background:rgba(255,255,255,0.05);color:#666}
+.tag-diff{background:rgba(255,165,0,0.1);color:#ffa500}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.open{display:flex}
+.modal{background:#111;border:0.5px solid #222;border-radius:16px;padding:1.5rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+.modal-emoji{font-size:36px;margin-bottom:8px}
+.modal-nom{font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px}
+.modal-pays{font-size:12px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.close-btn{background:none;border:none;color:#555;font-size:20px;cursor:pointer;padding:4px}
+.close-btn:hover{color:#f0f0f0}
+.modal-section{margin-bottom:1rem}
+.modal-section-title{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.ingredient-list{display:flex;flex-direction:column;gap:4px}
+.ingredient-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:#0d0d0d;border-radius:8px;font-size:13px}
+.ingredient-name{color:#f0f0f0}
+.ingredient-right{display:flex;gap:8px;align-items:center}
+.ingredient-qty{color:#555;font-size:12px}
+.ingredient-kcal{color:#00FF87;font-weight:600;font-size:12px}
+.total-bar{background:#0d0d0d;border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.total-label{font-size:13px;color:#555;font-weight:600}
+.total-val{font-size:18px;font-weight:700;color:#00FF87}
+.steps-list{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;gap:10px;font-size:13px;line-height:1.6;color:#888}
+.step-num{width:22px;height:22px;background:rgba(0,255,135,0.1);color:#00FF87;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.btn-ajouter{width:100%;padding:12px;background:#00FF87;color:#080808;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-top:1rem}
+.btn-ajouter:hover{background:#00e87a}
+.empty-pays{text-align:center;padding:3rem;color:#444;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back">← Accueil</a>
+  <div class="logo-text">Fit<span>Track</span></div>
+  <span style="font-size:13px;color:#555">Recettes</span>
+</div>
+
+<div class="hero">
+  <h1>Cuisines du <span>monde</span></h1>
+  <p>Explore les recettes, découvre les calories et les ingrédients.</p>
+</div>
+
+<div class="pays-grid" id="pays-grid"></div>
+<div class="recettes-grid" id="recettes-grid"></div>
+
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const PAYS=[
+  {id:'guadeloupe',nom:'Guadeloupe',flag:'🇬🇵'},
+  {id:'senegal',nom:'Sénégal',flag:'🇸🇳'},
+  {id:'maroc',nom:'Maroc',flag:'🇲🇦'},
+  {id:'comores',nom:'Comores',flag:'🇰🇲'},
+  {id:'italie',nom:'Italie',flag:'🇮🇹'},
+  {id:'inde',nom:'Inde',flag:'🇮🇳'},
+  {id:'turquie',nom:'Turquie',flag:'🇹🇷'},
+  {id:'thailand',nom:'Thaïlande',flag:'🇹🇭'},
+  {id:'indonesie',nom:'Indonésie',flag:'🇮🇩'},
+];
+
+const RECETTES={
+  guadeloupe:[
+    {nom:"Bokit Poulet",emoji:"🥙",desc:"Pain frit garni de poulet mariné, salade, tomate et sauce chien.",temps:"45 min",diff:"Moyen",portions:1,ingredients:[{n:"Farine de blé",q:120,k:350},{n:"Poulet mariné grillé",q:150,k:165},{n:"Salade verte",q:30,k:15},{n:"Tomate",q:60,k:18},{n:"Sauce chien (herbes citron piment)",q:20,k:25},{n:"Huile de friture",q:15,k:884}],steps:["Mélange farine, levure, sel et eau. Pétris et laisse reposer 1h.","Forme des disques et fais-les frire dans l'huile chaude jusqu'à dorure.","Grille le poulet mariné (ail, citron, piment, herbes).","Coupe le bokit, garnis avec poulet, salade, tomate et sauce chien."]},
+    {nom:"Colombo de poulet",emoji:"🍛",desc:"Curry antillais au poulet avec épices colombo, pommes de terre et courgettes.",temps:"60 min",diff:"Facile",portions:4,ingredients:[{n:"Poulet (morceaux)",q:800,k:165},{n:"Poudre colombo",q:20,k:320},{n:"Pomme de terre",q:300,k:86},{n:"Courgette",q:200,k:17},{n:"Tomate",q:150,k:18},{n:"Ail, oignon, piment",q:50,k:40},{n:"Huile",q:20,k:884}],steps:["Fais revenir l'oignon et l'ail dans l'huile.","Ajoute le poulet et la poudre colombo, fais dorer.","Ajoute les légumes et couvre d'eau. Mijote 40 min.","Ajuste le sel et le piment selon ton goût."]},
+    {nom:"Accras de morue",emoji:"🐟",desc:"Beignets de morue épicés, incontournables de l'apéritif antillais.",temps:"30 min",diff:"Facile",portions:4,ingredients:[{n:"Morue dessalée effilochée",q:200,k:82},{n:"Farine",q:150,k:350},{n:"Oeuf",q:55,k:155},{n:"Piment vert",q:10,k:20},{n:"Cive et persil",q:20,k:15},{n:"Huile de friture",q:30,k:884}],steps:["Mélange farine, oeuf, eau pour une pâte épaisse.","Ajoute la morue effilochée, le piment, la cive et le persil.","Fais chauffer l'huile et fais frire des petites cuillerées de pâte.","Égoutte sur du papier absorbant et sers chaud."]},
+    {nom:"Gratin de banane jaune",emoji:"🍌",desc:"Bananes plantains gratinées avec béchamel et fromage. Plat réconfortant.",temps:"40 min",diff:"Facile",portions:4,ingredients:[{n:"Banane plantain jaune",q:400,k:122},{n:"Béchamel (lait farine beurre)",q:200,k:120},{n:"Emmental râpé",q:60,k:382},{n:"Muscade sel poivre",q:5,k:10}],steps:["Coupe les bananes en rondelles et fais-les revenir à la poêle.","Prépare une béchamel légère.","Dispose les bananes dans un plat, nappe de béchamel et parsème de fromage.","Gratine au four 20 min à 200°C."]},
+    {nom:"Poulet boucané",emoji:"🍗",desc:"Poulet fumé à la canne à sucre, emblème de la cuisine guadeloupéenne.",temps:"90 min",diff:"Difficile",portions:4,ingredients:[{n:"Poulet entier",q:1200,k:165},{n:"Marinade (citron ail piment herbes)",q:80,k:30},{n:"Canne à sucre pour fumage",q:100,k:0}],steps:["Marine le poulet 12h dans citron, ail, piment, herbes et sel.","Prépare un fumoir artisanal avec de la canne à sucre.","Fais fumer et cuire le poulet à feu doux 1h30.","Le poulet doit être bien doré et fumé uniformément."]},
+    {nom:"Soupe Z'habitant",emoji:"🥣",desc:"Soupe créole traditionnelle avec légumes pays, viande salée et dombres.",temps:"75 min",diff:"Moyen",portions:6,ingredients:[{n:"Viande de porc salée",q:300,k:290},{n:"Igname",q:200,k:118},{n:"Patate douce",q:200,k:90},{n:"Farine pour dombres",q:100,k:350},{n:"Cive thym piment",q:30,k:20}],steps:["Dessale la viande plusieurs heures. Coupe en morceaux et fais revenir.","Couvre d'eau et ajoute les légumes pays coupés.","Prépare les dombres : mélange farine et eau, forme de petites boules.","Ajoute les dombres 15 min avant la fin de cuisson."]},
+  ],
+
+  senegal:[
+    {nom:"Thiéboudienne",emoji:"🍚",desc:"Plat national sénégalais : riz au poisson et légumes cuits dans une sauce tomate.",temps:"90 min",diff:"Difficile",portions:6,ingredients:[{n:"Riz brisé",q:500,k:350},{n:"Poisson (thiof ou yassa)",q:600,k:100},{n:"Tomate concentrée",q:80,k:80},{n:"Manioc carotte navet aubergine",q:400,k:50},{n:"Ail oignon piment",q:80,k:40},{n:"Huile d'arachide",q:60,k:900}],steps:["Farcis le poisson de roff (ail persil piment sel).","Fais revenir oignon et tomate dans l'huile, ajoute le poisson.","Ajoute les légumes et couvre d'eau. Cuis 30 min, retire le poisson.","Cuis le riz dans le bouillon coloré jusqu'à absorption."]},
+    {nom:"Yassa Poulet",emoji:"🍋",desc:"Poulet mariné au citron et oignons caramélisés, servi avec du riz blanc.",temps:"60 min",diff:"Facile",portions:4,ingredients:[{n:"Poulet (morceaux)",q:800,k:165},{n:"Oignons",q:400,k:40},{n:"Citron jus",q:80,k:20},{n:"Moutarde",q:20,k:70},{n:"Ail piment",q:20,k:40},{n:"Huile",q:30,k:884},{n:"Riz cuit",q:600,k:130}],steps:["Marine le poulet dans citron, moutarde, ail et piment toute une nuit.","Grille le poulet mariné puis réserve.","Caramélise les oignons dans l'huile longtemps jusqu'à coloration.","Ajoute le poulet et la marinade, mijote 20 min. Sers avec le riz."]},
+    {nom:"Mafé",emoji:"🥜",desc:"Ragoût sénégalais à la pâte d'arachide avec viande de boeuf et légumes.",temps:"75 min",diff:"Moyen",portions:4,ingredients:[{n:"Boeuf (morceaux)",q:600,k:172},{n:"Pâte d'arachide",q:150,k:598},{n:"Tomate concentrée",q:60,k:80},{n:"Pomme de terre carotte",q:300,k:70},{n:"Oignon ail",q:80,k:40},{n:"Huile",q:30,k:884}],steps:["Fais revenir l'oignon et le boeuf dans l'huile jusqu'à dorure.","Ajoute la tomate concentrée et fais revenir 5 min.","Délaye la pâte d'arachide dans de l'eau et ajoute au plat.","Ajoute les légumes et mijote 45 min à feu doux."]},
+    {nom:"Thiébou Yapp",emoji:"🍖",desc:"Riz à la viande de boeuf, version terrienne du thiéboudienne.",temps:"80 min",diff:"Moyen",portions:6,ingredients:[{n:"Riz brisé",q:500,k:350},{n:"Boeuf en morceaux",q:500,k:172},{n:"Tomate concentrée",q:60,k:80},{n:"Légumes pays",q:300,k:50},{n:"Oignon ail piment",q:80,k:40},{n:"Huile d'arachide",q:50,k:900}],steps:["Fais dorer la viande dans l'huile avec oignons et ail.","Ajoute la tomate et fais revenir. Couvre d'eau et ajoute les légumes.","Cuis 40 min puis retire viande et légumes.","Cuis le riz dans le bouillon jusqu'à absorption complète."]},
+    {nom:"Pastels",emoji:"🥟",desc:"Beignets farcis au poisson épicé, street food incontournable au Sénégal.",temps:"45 min",diff:"Moyen",portions:4,ingredients:[{n:"Farine",q:250,k:350},{n:"Thon ou sardine",q:200,k:116},{n:"Oignon persil piment",q:60,k:30},{n:"Huile de friture",q:40,k:884}],steps:["Prépare une pâte avec farine, eau, sel et un peu d'huile.","Mélange le poisson émietté avec oignon, persil et piment.","Étale la pâte, dépose la farce et ferme en demi-lune.","Fais frire jusqu'à dorure dorée."]},
+    {nom:"Caldou",emoji:"🐠",desc:"Soupe de poisson légère au riz, spécialité casamançaise.",temps:"40 min",diff:"Facile",portions:4,ingredients:[{n:"Poisson frais",q:500,k:100},{n:"Riz",q:200,k:350},{n:"Citron",q:40,k:20},{n:"Oignon tomate",q:150,k:25},{n:"Ail piment sel",q:30,k:20}],steps:["Cuis le poisson dans de l'eau avec oignon, tomate et ail.","Retire le poisson et ajoute le riz dans le bouillon.","Cuis le riz jusqu'à absorption. Sers avec le poisson et du citron.","Accompagne de sauce citron piment."]},
+  ],
+
+  maroc:[
+    {nom:"Tajine Poulet Citron",emoji:"🍋",desc:"Tajine traditionnel au poulet, citrons confits et olives violettes.",temps:"75 min",diff:"Facile",portions:4,ingredients:[{n:"Poulet morceaux",q:800,k:165},{n:"Citrons confits",q:60,k:40},{n:"Olives violettes",q:80,k:145},{n:"Oignon",q:200,k:40},{n:"Ail gingembre curcuma",q:30,k:50},{n:"Huile d'olive",q:40,k:884},{n:"Coriandre persil",q:20,k:15}],steps:["Fais revenir l'oignon dans l'huile d'olive avec les épices.","Ajoute le poulet et dore sur toutes les faces.","Ajoute citrons confits et olives. Couvre et mijote 45 min.","Parsème de coriandre fraîche avant de servir."]},
+    {nom:"Couscous Royal",emoji:"🫕",desc:"Semoule fine avec légumes mijotés, merguez et viande d'agneau.",temps:"90 min",diff:"Moyen",portions:6,ingredients:[{n:"Semoule fine",q:500,k:350},{n:"Agneau",q:400,k:200},{n:"Merguez",q:200,k:310},{n:"Carotte navet courgette",q:400,k:35},{n:"Pois chiches",q:150,k:164},{n:"Oignon tomate épices",q:150,k:40},{n:"Beurre",q:30,k:717}],steps:["Cuis la viande et les légumes dans un bouillon épicé 1h.","Hydrate la semoule à l'eau chaude salée puis égrène au beurre.","Grille les merguez séparément.","Sers la semoule avec la viande, les légumes et le bouillon."]},
+    {nom:"Pastilla au Poulet",emoji:"🥧",desc:"Tourte feuilletée salée-sucrée à la volaille, amandes et cannelle.",temps:"90 min",diff:"Difficile",portions:6,ingredients:[{n:"Feuilles de brick",q:200,k:280},{n:"Poulet cuit effiloché",q:400,k:165},{n:"Amandes grillées",q:100,k:579},{n:"Oeufs",q:165,k:155},{n:"Oignon cannelle gingembre",q:80,k:40},{n:"Sucre glace",q:20,k:400},{n:"Beurre",q:50,k:717}],steps:["Cuis le poulet avec oignons et épices. Effiloche et mélange aux oeufs brouillés.","Broie grossièrement les amandes avec un peu de sucre et cannelle.","Superpose les feuilles de brick beurrées. Alterne couches de poulet et amandes.","Ferme la pastilla et cuis au four 25 min à 190°C. Saupoudre de sucre glace."]},
+    {nom:"Harira",emoji:"🥣",desc:"Soupe traditionnelle marocaine aux lentilles, pois chiches et tomate.",temps:"60 min",diff:"Facile",portions:6,ingredients:[{n:"Tomates fraîches",q:400,k:18},{n:"Pois chiches cuits",q:200,k:164},{n:"Lentilles rouges",q:100,k:116},{n:"Agneau en dés",q:150,k:200},{n:"Oignon céleri",q:150,k:30},{n:"Coriandre persil citron",q:40,k:15},{n:"Épices ras el hanout",q:10,k:300}],steps:["Fais revenir l'agneau et l'oignon dans un peu d'huile.","Ajoute tomates, pois chiches, lentilles et épices. Couvre d'eau.","Mijote 40 min à feu doux. Ajoute coriandre et persil en fin de cuisson.","Sers avec un filet de citron et des dattes."]},
+    {nom:"Zaalouk",emoji:"🍆",desc:"Salade cuite d'aubergines et tomates aux épices, servie en entrée.",temps:"30 min",diff:"Facile",portions:4,ingredients:[{n:"Aubergine",q:400,k:25},{n:"Tomate",q:300,k:18},{n:"Ail",q:20,k:149},{n:"Cumin paprika coriandre",q:10,k:300},{n:"Huile d'olive",q:30,k:884},{n:"Citron sel",q:20,k:10}],steps:["Cuis les aubergines et tomates à l'eau ou à la vapeur.","Ecrase grossièrement avec une fourchette.","Fais revenir l'ail dans l'huile, ajoute les légumes et les épices.","Mijote 10 min. Sers froid avec du citron."]},
+    {nom:"Msemen",emoji:"🫓",desc:"Crêpe feuilletée marocaine, servie au miel ou avec du fromage.",temps:"45 min",diff:"Moyen",portions:6,ingredients:[{n:"Farine de blé",q:400,k:350},{n:"Semoule fine",q:100,k:350},{n:"Beurre fondu",q:50,k:717},{n:"Huile",q:30,k:884},{n:"Sel levure",q:5,k:0}],steps:["Mélange farine, semoule, sel et eau tiède. Pétris 10 min.","Forme des boules, étale finement en carré et badigeonne de beurre.","Plie en plusieurs couches et ré-étale. Répète l'opération.","Cuis à la poêle sèche des deux côtés jusqu'à dorure."]},
+  ],
+
+  comores:[
+    {nom:"Langouste grillée",emoji:"🦞",desc:"Langouste fraîche des Comores grillée au beurre ail et citron.",temps:"30 min",diff:"Facile",portions:2,ingredients:[{n:"Langouste",q:500,k:90},{n:"Beurre",q:40,k:717},{n:"Ail",q:15,k:149},{n:"Citron",q:30,k:20},{n:"Persil sel poivre",q:10,k:10}],steps:["Coupe la langouste en deux dans la longueur.","Mélange beurre fondu, ail haché et persil.","Badigeonne généreusement la chair et pose sur le gril.","Cuis 10 min côté chair, retourne et cuis encore 5 min."]},
+    {nom:"Mkatra Foutra",emoji:"🫓",desc:"Pain comorien à la coco cuit sur une plaque, moelleux et parfumé.",temps:"60 min",diff:"Moyen",portions:6,ingredients:[{n:"Farine",q:500,k:350},{n:"Lait de coco",q:200,k:180},{n:"Levure",q:7,k:0},{n:"Sucre sel",q:20,k:400},{n:"Oeuf",q:55,k:155}],steps:["Mélange farine, levure, sucre et sel. Ajoute lait de coco et oeuf.","Pétris jusqu'à obtenir une pâte souple. Laisse lever 1h.","Forme des galettes rondes et cuis sur une plaque chaude légèrement huilée.","Retourne quand des bulles se forment. Cuis jusqu'à dorure."]},
+    {nom:"Poulet au coco comorien",emoji:"🥥",desc:"Poulet mijoté dans le lait de coco avec épices locales et riz blanc.",temps:"50 min",diff:"Facile",portions:4,ingredients:[{n:"Poulet morceaux",q:800,k:165},{n:"Lait de coco",q:400,k:180},{n:"Tomate oignon",q:200,k:25},{n:"Ail gingembre cardamome",q:30,k:50},{n:"Riz cuit",q:600,k:130},{n:"Huile",q:20,k:884}],steps:["Fais dorer le poulet dans l'huile avec oignon et épices.","Ajoute les tomates et fais revenir 5 min.","Verse le lait de coco et mijote 30 min à feu doux.","Sers avec du riz blanc."]},
+    {nom:"Pilaou",emoji:"🍚",desc:"Riz épicé aux viandes et épices de l'Océan Indien, plat de fête comorien.",temps:"75 min",diff:"Moyen",portions:6,ingredients:[{n:"Riz",q:500,k:350},{n:"Boeuf ou agneau",q:400,k:200},{n:"Oignon tomate",q:250,k:30},{n:"Cardamome cannelle clou girofle",q:10,k:300},{n:"Lait de coco",q:200,k:180},{n:"Beurre",q:40,k:717}],steps:["Fais revenir les épices entières dans le beurre 1 min.","Ajoute l'oignon puis la viande. Fais dorer.","Ajoute tomates, lait de coco et un peu d'eau. Mijote 30 min.","Ajoute le riz lavé, couvre et cuis à feu doux jusqu'à absorption."]},
+    {nom:"Sambousa",emoji:"🥟",desc:"Beignets triangulaires farcis à la viande épicée, street food des Comores.",temps:"45 min",diff:"Moyen",portions:4,ingredients:[{n:"Feuilles de brick",q:150,k:280},{n:"Boeuf haché",q:250,k:215},{n:"Oignon persil piment",q:80,k:30},{n:"Epices (cumin coriandre)",q:10,k:300},{n:"Huile de friture",q:40,k:884}],steps:["Fais revenir le boeuf haché avec oignon, épices et persil.","Découpe les feuilles de brick en bandes. Place une cuillerée de farce au bout.","Plie en triangle en repliant les coins successivement.","Scelle avec de l'eau et fais frire jusqu'à dorure."]},
+    {nom:"Mahamri",emoji:"🍩",desc:"Beignets sucrés à la cardamome et au lait de coco, petit-déjeuner comorien.",temps:"40 min",diff:"Facile",portions:8,ingredients:[{n:"Farine",q:400,k:350},{n:"Lait de coco",q:150,k:180},{n:"Sucre",q:50,k:400},{n:"Levure cardamome",q:10,k:50},{n:"Huile de friture",q:40,k:884}],steps:["Mélange farine, sucre, cardamome et levure. Ajoute le lait de coco.","Pétris jusqu'à pâte souple. Laisse lever 45 min.","Étale et découpe en triangles ou ronds.","Fais frire dans l'huile chaude jusqu'à gonflage et dorure."]},
+  ],
+
+  italie:[
+    {nom:"Spaghetti Carbonara",emoji:"🍝",desc:"Pâtes à la romaine avec guanciale, oeufs, pecorino. Sans crème.",temps:"25 min",diff:"Moyen",portions:2,ingredients:[{n:"Spaghetti",q:200,k:350},{n:"Guanciale ou lardons",q:100,k:350},{n:"Oeufs entiers + jaunes",q:110,k:155},{n:"Pecorino romano râpé",q:50,k:390},{n:"Poivre noir",q:3,k:0}],steps:["Cuis les pâtes al dente en eau très salée.","Fais revenir le guanciale à sec jusqu'à croustillant.","Mélange oeufs et pecorino. Poivre généreusement.","Hors feu, mélange pâtes, guanciale et sauce oeuf. L'eau de cuisson crée la crémosité."]},
+    {nom:"Pizza Margherita",emoji:"🍕",desc:"La pizza napolitaine classique : tomate, mozzarella et basilic frais.",temps:"90 min",diff:"Moyen",portions:2,ingredients:[{n:"Farine à pizza",q:250,k:350},{n:"Tomate San Marzano",q:150,k:18},{n:"Mozzarella di bufala",q:125,k:280},{n:"Basilic frais",q:10,k:22},{n:"Huile d'olive",q:15,k:884},{n:"Sel levure",q:5,k:0}],steps:["Prépare la pâte : farine, eau, levure, sel. Pétris 10 min. Repos 2h.","Étale finement. Nappe de tomate San Marzano écrasée.","Ajoute la mozzarella déchirée et un filet d'huile.","Cuis au four à 250°C (ou plus chaud possible) 8 à 10 min."]},
+    {nom:"Risotto Milanese",emoji:"🍚",desc:"Risotto crémeux au safran, spécialité de Milan. Simple et élégant.",temps:"35 min",diff:"Moyen",portions:4,ingredients:[{n:"Riz Arborio",q:320,k:350},{n:"Bouillon de boeuf",q:1000,k:10},{n:"Safran",q:0.5,k:310},{n:"Oignon",q:80,k:40},{n:"Beurre",q:60,k:717},{n:"Parmesan râpé",q:60,k:400},{n:"Vin blanc sec",q:80,k:65}],steps:["Fais revenir l'oignon dans le beurre. Ajoute le riz et nacre 2 min.","Déglace au vin blanc. Ajoute le bouillon chaud louche par louche.","Après 15 min, ajoute le safran dilué dans un peu de bouillon.","Hors feu, mantecatura : incorpore beurre froid et parmesan. Repose 2 min."]},
+    {nom:"Osso Buco",emoji:"🥩",desc:"Jarret de veau braisé à la milanaise avec gremolata citronnée.",temps:"100 min",diff:"Moyen",portions:4,ingredients:[{n:"Jarret de veau",q:800,k:158},{n:"Tomate vin blanc oignon",q:300,k:40},{n:"Bouillon",q:200,k:10},{n:"Ail citron persil (gremolata)",q:30,k:20},{n:"Farine huile beurre",q:40,k:500}],steps:["Farine les jarrets et fais-les dorer dans huile et beurre.","Ajoute oignon, vin blanc et tomate. Couvre de bouillon.","Braise au four 1h30 à 160°C.","Prépare la gremolata : ail haché, zeste de citron, persil. Parsème au service."]},
+    {nom:"Tiramisu",emoji:"🍰",desc:"Dessert italien classique au mascarpone, café et biscuits savoiardi.",temps:"30 min",diff:"Facile",portions:6,ingredients:[{n:"Mascarpone",q:250,k:400},{n:"Oeufs",q:165,k:155},{n:"Sucre",q:80,k:400},{n:"Biscuits savoiardi",q:200,k:380},{n:"Café fort refroidi",q:150,k:5},{n:"Cacao en poudre",q:20,k:350}],steps:["Sépare les oeufs. Blanchis jaunes et sucre. Incorpore mascarpone.","Monte les blancs en neige ferme et incorpore délicatement.","Trempe rapidement les biscuits dans le café et dispose en couche.","Alterne crème et biscuits. Réfrigère 4h minimum. Saupoudre de cacao."]},
+    {nom:"Parmigiana di Melanzane",emoji:"🍆",desc:"Gratin d'aubergines à la tomate et mozzarella, plat du sud de l'Italie.",temps:"75 min",diff:"Moyen",portions:4,ingredients:[{n:"Aubergines",q:800,k:25},{n:"Tomate concassée",q:400,k:18},{n:"Mozzarella",q:200,k:280},{n:"Parmesan",q:60,k:400},{n:"Basilic ail",q:20,k:20},{n:"Huile d'olive",q:40,k:884}],steps:["Tranche les aubergines, sale et laisse dégorger 30 min. Rince et sèche.","Fais dorer les tranches à l'huile d'olive.","Prépare une sauce tomate simple avec ail et basilic.","Alterne aubergines, sauce, mozzarella dans un plat. Parmesan sur le dessus. Cuis 30 min à 180°C."]},
+  ],
+
+  inde:[
+    {nom:"Poulet Tikka Masala",emoji:"🍛",desc:"Poulet mariné au yaourt et épices, mijoté dans une sauce tomate crémeuse.",temps:"60 min",diff:"Moyen",portions:4,ingredients:[{n:"Poulet",q:600,k:165},{n:"Yaourt nature",q:150,k:60},{n:"Tomate concassée",q:400,k:18},{n:"Crème",q:100,k:292},{n:"Oignon ail gingembre",q:150,k:40},{n:"Epices (garam masala cumin curcuma)",q:20,k:300},{n:"Huile",q:30,k:884}],steps:["Marine le poulet dans yaourt et épices 2h minimum.","Grille les morceaux au four ou en poêle.","Fais revenir oignon, ail, gingembre. Ajoute les épices puis la tomate.","Ajoute la crème et le poulet grillé. Mijote 15 min."]},
+    {nom:"Dal Makhani",emoji:"🥘",desc:"Lentilles noires mijotées toute la nuit dans une sauce riche au beurre et crème.",temps:"480 min",diff:"Facile",portions:6,ingredients:[{n:"Lentilles noires urad",q:300,k:340},{n:"Tomate concassée",q:200,k:18},{n:"Beurre",q:60,k:717},{n:"Crème",q:80,k:292},{n:"Ail gingembre",q:30,k:50},{n:"Epices",q:15,k:300}],steps:["Trempe les lentilles une nuit. Cuis-les 1h à l'eau.","Prépare un masala : fais revenir ail, gingembre et épices dans le beurre.","Ajoute tomates et lentilles. Mijote à feu très doux 3h minimum.","Finis avec la crème et le beurre. Le plat est meilleur le lendemain."]},
+    {nom:"Palak Paneer",emoji:"🥬",desc:"Fromage frais indien dans une sauce aux épinards crémeuse et épicée.",temps:"40 min",diff:"Facile",portions:4,ingredients:[{n:"Epinards frais",q:500,k:23},{n:"Paneer",q:250,k:265},{n:"Oignon tomate",q:200,k:30},{n:"Ail gingembre crème",q:60,k:100},{n:"Epices (garam masala cumin)",q:15,k:300},{n:"Huile beurre",q:30,k:800}],steps:["Blanchis les épinards 2 min puis mixe en purée lisse.","Fais revenir oignon, ail, gingembre et épices. Ajoute tomate.","Incorpore la purée d'épinards et la crème. Mijote 10 min.","Ajoute le paneer coupé en cubes. Cuis encore 5 min."]},
+    {nom:"Biryani Agneau",emoji:"🍖",desc:"Riz parfumé au safran cuit avec agneau mariné et épices nobles.",temps:"120 min",diff:"Difficile",portions:6,ingredients:[{n:"Riz basmati",q:500,k:350},{n:"Agneau",q:600,k:200},{n:"Yaourt",q:200,k:60},{n:"Oignon frit",q:100,k:400},{n:"Safran lait chaud",q:10,k:50},{n:"Epices entières",q:20,k:300},{n:"Ghee",q:60,k:900}],steps:["Marine l'agneau dans yaourt et épices 4h.","Cuis la viande dans le ghee avec épices. Réserve.","Cuis le riz à moitié dans eau bouillante épicée. Égoutte.","Superpose viande et riz. Verse safran et ghee. Scelle et cuis à l'étouffée 30 min."]},
+    {nom:"Samosa",emoji:"🥟",desc:"Beignets triangulaires farcis aux pommes de terre et petits pois épicés.",temps:"60 min",diff:"Moyen",portions:4,ingredients:[{n:"Farine",q:200,k:350},{n:"Pomme de terre cuite",q:300,k:86},{n:"Petits pois",q:100,k:81},{n:"Oignon ail gingembre",q:60,k:40},{n:"Epices (cumin coriandre)",q:10,k:300},{n:"Huile de friture",q:40,k:884}],steps:["Prépare la pâte avec farine, sel, eau et huile. Repose 20 min.","Mélange pommes de terre écrasées, petits pois et épices.","Forme des cônes avec la pâte, farcie et scelle.","Fais frire à 180°C jusqu'à dorure."]},
+    {nom:"Naan au beurre",emoji:"🫓",desc:"Pain plat indien moelleux cuit au tandoor, ici à la poêle.",temps:"30 min",diff:"Facile",portions:4,ingredients:[{n:"Farine",q:300,k:350},{n:"Yaourt",q:100,k:60},{n:"Levure",q:5,k:0},{n:"Beurre fondu",q:40,k:717},{n:"Lait",q:80,k:47},{n:"Sel sucre",q:5,k:400}],steps:["Mélange farine, yaourt, levure, lait et sel. Pétris 8 min. Repose 1h.","Divise en boules et étale en ovales fins.","Cuis dans une poêle très chaude sans matière grasse, 2 min chaque côté.","Badigeonne de beurre fondu dès la sortie."]},
+  ],
+
+  turquie:[
+    {nom:"Kebab Adana",emoji:"🍢",desc:"Brochette de viande hachée épicée grillée, spécialité d'Adana.",temps:"30 min",diff:"Facile",portions:4,ingredients:[{n:"Agneau haché",q:600,k:200},{n:"Oignon rouge",q:100,k:40},{n:"Piment rouge pul biber",q:15,k:280},{n:"Persil cumin",q:20,k:50},{n:"Pain pita",q:200,k:275}],steps:["Mélange viande, oignon râpé, épices et persil. Malaxe bien.","Forme des longues brochettes en entourant les pics de viande.","Grille sur braise ou plancha 8 min en tournant.","Sers avec pain pita, oignons rouges et persil."]},
+    {nom:"Meze Houmous",emoji:"🥗",desc:"Purée de pois chiches à l'ail, tahini et citron. Entrée incontournable.",temps:"15 min",diff:"Facile",portions:4,ingredients:[{n:"Pois chiches cuits",q:300,k:164},{n:"Tahini",q:60,k:590},{n:"Citron jus",q:40,k:20},{n:"Ail",q:10,k:149},{n:"Huile d'olive",q:20,k:884},{n:"Cumin paprika",q:5,k:300}],steps:["Mixe pois chiches, tahini, citron et ail jusqu'à purée très lisse.","Ajoute de l'eau froide progressivement pour texture crémeuse.","Assaisonne et dispose dans un bol creux.","Verse huile d'olive et saupoudre de paprique. Sers avec pain pita."]},
+    {nom:"Lahmacun",emoji:"🫓",desc:"Pizza turque fine avec viande hachée épicée et légumes frais.",temps:"45 min",diff:"Moyen",portions:4,ingredients:[{n:"Farine",q:300,k:350},{n:"Agneau haché",q:300,k:200},{n:"Tomate oignon poivron",q:200,k:25},{n:"Persil piment",q:30,k:20},{n:"Huile d'olive",q:15,k:884},{n:"Levure sel",q:5,k:0}],steps:["Prépare une pâte fine avec farine, eau, sel et levure. Repose 30 min.","Mixe la garniture : viande, légumes et épices.","Étale très finement et nappe de garniture.","Cuis au four max (250°C) 6 min. Sers roulé avec salade et jus de citron."]},
+    {nom:"Börek aux épinards",emoji:"🥬",desc:"Feuilleté de pâte yufka farci aux épinards et feta. Plat du quotidien.",temps:"50 min",diff:"Moyen",portions:6,ingredients:[{n:"Pâte yufka ou brick",q:300,k:280},{n:"Epinards frais",q:400,k:23},{n:"Feta",q:150,k:260},{n:"Oignon",q:100,k:40},{n:"Oeuf",q:110,k:155},{n:"Huile d'olive",q:40,k:884}],steps:["Fais revenir oignon et épinards. Mélange avec feta émiettée.","Badigeonne chaque feuille de yufka d'huile.","Alterne couches de pâte et farce dans un plat beurré.","Badigeonne le dessus d'oeuf battu. Cuis 35 min à 180°C."]},
+    {nom:"Menemen",emoji:"🍳",desc:"Oeufs brouillés turcs aux tomates, poivrons et épices. Petit-déjeuner classique.",temps:"20 min",diff:"Facile",portions:2,ingredients:[{n:"Oeufs",q:165,k:155},{n:"Tomate",q:250,k:18},{n:"Poivron vert",q:150,k:31},{n:"Oignon",q:80,k:40},{n:"Piment huile d'olive",q:20,k:200},{n:"Sel poivre cumin",q:5,k:0}],steps:["Fais revenir oignon et poivron dans l'huile 5 min.","Ajoute les tomates concassées et épices. Cuis 8 min.","Casse les oeufs directement dans la poêle. Mélange doucement.","Arrête la cuisson quand les oeufs sont encore moelleux."]},
+    {nom:"Baklava",emoji:"🍯",desc:"Pâtisserie feuilletée aux pistaches et sirop de miel, dessert ottoman.",temps:"60 min",diff:"Difficile",portions:12,ingredients:[{n:"Pâte filo",q:300,k:280},{n:"Pistaches hachées",q:200,k:560},{n:"Beurre fondu",q:150,k:717},{n:"Sucre miel eau fleur d'oranger",q:200,k:400}],steps:["Superpose 10 feuilles filo beurrées dans un plat. Verse pistaches.","Continue à alterner 10 autres feuilles beurrées.","Découpe en losanges avant cuisson. Cuis 40 min à 170°C.","Verse le sirop chaud sur le baklava froid dès la sortie du four."]},
+  ],
+
+  thailand:[
+    {nom:"Pad Thai",emoji:"🍜",desc:"Nouilles de riz sautées aux crevettes, cacahuètes et citron vert.",temps:"20 min",diff:"Facile",portions:2,ingredients:[{n:"Nouilles de riz",q:200,k:350},{n:"Crevettes",q:150,k:99},{n:"Oeufs",q:110,k:155},{n:"Pousses de soja",q:100,k:30},{n:"Sauce fish sauce citron palm sugar",q:60,k:80},{n:"Cacahuètes grillées",q:40,k:570},{n:"Cive piment citron vert",q:30,k:20}],steps:["Trempe les nouilles dans l'eau tiède 20 min. Égoutte.","Fais sauter les crevettes dans un wok très chaud. Réserve.","Ajoute les oeufs brouillés puis les nouilles et la sauce.","Ajoute crevettes, soja, cive. Sers avec cacahuètes et citron vert."]},
+    {nom:"Tom Yum Goong",emoji:"🍲",desc:"Soupe épicée et acidulée aux crevettes et champignons, emblème thaï.",temps:"25 min",diff:"Facile",portions:4,ingredients:[{n:"Crevettes",q:300,k:99},{n:"Champignons",q:150,k:22},{n:"Citronnelle galanga feuilles kaffir",q:40,k:20},{n:"Tomate cerise",q:100,k:18},{n:"Fish sauce citron piment",q:50,k:40},{n:"Bouillon",q:800,k:10}],steps:["Porte le bouillon à ébullition avec citronnelle, galanga et feuilles kaffir.","Ajoute champignons et tomates. Cuis 5 min.","Ajoute les crevettes et cuis 3 min.","Assaisonne avec fish sauce et citron. Ajoute le piment selon goût."]},
+    {nom:"Green Curry",emoji:"🍛",desc:"Curry vert au lait de coco avec poulet, aubergines thaïes et basilic.",temps:"30 min",diff:"Facile",portions:4,ingredients:[{n:"Poulet",q:500,k:165},{n:"Lait de coco",q:400,k:180},{n:"Pâte curry vert",q:40,k:120},{n:"Aubergine thaïe",q:200,k:25},{n:"Basilic thaï",q:20,k:22},{n:"Fish sauce sucre palm",q:30,k:50},{n:"Riz cuit",q:600,k:130}],steps:["Fais revenir la pâte curry dans un peu de lait de coco.","Ajoute le poulet et fais dorer légèrement.","Verse le reste du lait de coco et ajoute les aubergines.","Mijote 15 min. Ajoute fish sauce, sucre et basilic. Sers avec riz."]},
+    {nom:"Som Tam",emoji:"🥗",desc:"Salade de papaye verte épicée, fraîche et acidulée. Street food iconic.",temps:"15 min",diff:"Facile",portions:2,ingredients:[{n:"Papaye verte râpée",q:300,k:43},{n:"Tomate cerise",q:100,k:18},{n:"Cacahuètes",q:30,k:570},{n:"Haricots longs",q:60,k:31},{n:"Ail piment",q:10,k:40},{n:"Citron vert fish sauce palm sugar",q:50,k:50}],steps:["Pile ail et piment au mortier. Ajoute sucre, citron et fish sauce.","Ajoute papaye, tomates et haricots. Écrase légèrement en mélangeant.","Goûte et ajuste l'équilibre sucré-salé-acide-pimenté.","Parsème de cacahuètes et sers immédiatement."]},
+    {nom:"Massaman Curry",emoji:"🥘",desc:"Curry doux d'influence indienne avec boeuf, pommes de terre et cacahuètes.",temps:"90 min",diff:"Moyen",portions:4,ingredients:[{n:"Boeuf",q:500,k:172},{n:"Lait de coco",q:400,k:180},{n:"Pâte massaman",q:50,k:150},{n:"Pomme de terre",q:300,k:86},{n:"Cacahuètes",q:60,k:570},{n:"Oignon cannelle cardamome",q:80,k:50}],steps:["Fais revenir la pâte massaman dans le lait de coco.","Ajoute le boeuf et les épices entières. Couvre et mijote 1h.","Ajoute pommes de terre et cacahuètes. Cuis encore 20 min.","Sers avec du riz jasmin."]},
+    {nom:"Mango Sticky Rice",emoji:"🥭",desc:"Riz gluant sucré au lait de coco servi avec mangue fraîche. Dessert emblématique.",temps:"30 min",diff:"Facile",portions:4,ingredients:[{n:"Riz gluant",q:300,k:350},{n:"Lait de coco",q:300,k:180},{n:"Sucre sel",q:60,k:400},{n:"Mangue fraîche",q:300,k:60},{n:"Graines de sésame",q:10,k:573}],steps:["Trempe le riz gluant 4h. Cuis à la vapeur 25 min.","Chauffe lait de coco avec sucre et sel jusqu'à dissolution.","Verse 2/3 du lait de coco sur le riz chaud. Laisse absorber 20 min.","Sers le riz avec mangue tranchée et le reste de crème coco. Parsème de sésame."]},
+  ],
+
+  indonesie:[
+    {nom:"Nasi Goreng",emoji:"🍳",desc:"Riz frit au kecap manis, plat national indonésien avec oeuf et crevettes.",temps:"15 min",diff:"Facile",portions:2,ingredients:[{n:"Riz cuit froid",q:400,k:130},{n:"Crevettes",q:100,k:99},{n:"Oeufs",q:110,k:155},{n:"Oignon ail",q:60,k:40},{n:"Kecap manis sauce soja sucrée",q:30,k:130},{n:"Piment sambal",q:10,k:40},{n:"Huile",q:20,k:884}],steps:["Fais revenir ail et oignon dans le wok très chaud.","Ajoute les crevettes puis le riz froid. Mélange énergiquement.","Verse le kecap manis et le sambal. Fais sauter encore 3 min.","Pousse le riz sur le côté, cuis un oeuf au plat. Sers ensemble."]},
+    {nom:"Satay Poulet",emoji:"🍡",desc:"Brochettes de poulet mariné grillées avec sauce cacahuète épicée.",temps:"40 min",diff:"Facile",portions:4,ingredients:[{n:"Poulet",q:500,k:165},{n:"Sauce cacahuète (beurre cacahuète soja citron piment)",q:100,k:400},{n:"Curcuma coriandre citronnelle",q:20,k:50},{n:"Kecap manis",q:20,k:130},{n:"Huile",q:15,k:884}],steps:["Marine le poulet en lamelles dans épices, kecap et huile 1h.","Enfile sur des piques en bois et grille 8 min en tournant.","Prépare la sauce : beurre de cacahuète dilué dans eau chaude avec soja et piment.","Sers les satays avec la sauce et des tranches de concombre."]},
+    {nom:"Gado-Gado",emoji:"🥗",desc:"Salade végétarienne de légumes cuits et crus avec sauce cacahuète.",temps:"30 min",diff:"Facile",portions:4,ingredients:[{n:"Pomme de terre cuite",q:200,k:86},{n:"Tofu frit",q:150,k:145},{n:"Oeuf dur",q:110,k:155},{n:"Haricots verts",q:100,k:31},{n:"Pousses de soja",q:100,k:30},{n:"Sauce cacahuète",q:120,k:400},{n:"Chips crevettes",q:30,k:500}],steps:["Cuis les légumes séparément : haricots, pommes de terre.","Dispose tous les éléments sur un plat : légumes, tofu, oeufs.","Prépare la sauce cacahuète : mixe cacahuètes, piment, ail, citron, eau.","Verse généreusement la sauce et ajoute les chips crevettes."]},
+    {nom:"Rendang Sapi",emoji:"🥩",desc:"Boeuf mijoté lentement dans lait de coco et épices jusqu'à caramélisation.",temps:"180 min",diff:"Difficile",portions:6,ingredients:[{n:"Boeuf",q:800,k:172},{n:"Lait de coco",q:600,k:180},{n:"Citronnelle galanga",q:40,k:20},{n:"Piment rouge",q:50,k:31},{n:"Ail oignon échalote",q:100,k:40},{n:"Epices (curcuma cumin coriandre)",q:20,k:300}],steps:["Mixe la pâte d'épices : piment, ail, oignon, galanga.","Fais revenir la pâte dans un peu d'huile 5 min.","Ajoute le boeuf et le lait de coco. Porte à ébullition.","Mijote à découvert 2h30 en remuant jusqu'à absorption et caramélisation."]},
+    {nom:"Mie Goreng",emoji:"🍜",desc:"Nouilles sautées indonésiennes au poulet, légumes et kecap manis.",temps:"20 min",diff:"Facile",portions:2,ingredients:[{n:"Nouilles aux oeufs",q:200,k:280},{n:"Poulet cuit",q:150,k:165},{n:"Chou carotte oignon ail",q:150,k:35},{n:"Kecap manis sauce soja",q:40,k:130},{n:"Oeuf",q:55,k:155},{n:"Huile sambal",q:20,k:500}],steps:["Cuis les nouilles al dente. Égoutte et réserve.","Fais sauter ail et légumes dans le wok. Ajoute le poulet.","Ajoute les nouilles et les sauces. Mélange à feu vif.","Pousse sur le côté, brouille un oeuf. Mélange tout ensemble."]},
+    {nom:"Soto Ayam",emoji:"🍲",desc:"Soupe de poulet au curcuma avec vermicelle, oeuf dur et chips de pomme de terre.",temps:"45 min",diff:"Facile",portions:4,ingredients:[{n:"Poulet entier",q:800,k:165},{n:"Vermicelle de riz",q:100,k:350},{n:"Oeuf dur",q:110,k:155},{n:"Curcuma galanga citronnelle",q:30,k:50},{n:"Oignon ail",q:80,k:40},{n:"Chips pomme de terre",q:30,k:450}],steps:["Cuis le poulet dans l'eau avec épices, ail et oignon 30 min.","Retire le poulet, effiloche la chair. Filtre le bouillon.","Cuis le vermicelle dans le bouillon.","Sers avec le poulet effiloché, l'oeuf coupé et les chips."]},
+  ],
+};
+
+let paysActif=null;
+
+function renderPays(){
+  const el=document.getElementById('pays-grid');
+  el.innerHTML=PAYS.map(p=>`<button class="pays-btn${paysActif===p.id?' active':''}" onclick="selectPays('${p.id}')">${p.flag} ${p.nom}</button>`).join('');
+}
+
+function selectPays(id){
+  paysActif=id;
+  renderPays();
+  renderRecettes();
+}
+
+function totalKcal(recette){
+  return Math.round(recette.ingredients.reduce((s,i)=>s+(i.k*i.q/100),0)/recette.portions);
+}
+
+function renderRecettes(){
+  const el=document.getElementById('recettes-grid');
+  if(!paysActif){el.innerHTML='';return;}
+  const liste=RECETTES[paysActif]||[];
+  el.innerHTML=liste.map((r,i)=>`
+    <div class="recette-card" onclick="openModal(${i})">
+      <div class="recette-emoji">${r.emoji}</div>
+      <div class="recette-nom">${r.nom}</div>
+      <div class="recette-desc">${r.desc}</div>
+      <div class="recette-meta">
+        <span class="tag tag-kcal">~${totalKcal(r)} kcal/pers</span>
+        <span class="tag tag-time">⏱ ${r.temps}</span>
+        <span class="tag tag-diff">${r.diff}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal(i){
+  const r=RECETTES[paysActif][i];
+  const total=Math.round(r.ingredients.reduce((s,ing)=>s+(ing.k*ing.q/100),0)/r.portions);
+  const modal=document.getElementById('modal');
+  modal.innerHTML=`
+    <div class="modal-top">
+      <div>
+        <div class="modal-emoji">${r.emoji}</div>
+        <div class="modal-nom">${r.nom}</div>
+        <div class="modal-pays">${PAYS.find(p=>p.id===paysActif).flag} ${PAYS.find(p=>p.id===paysActif).nom} · ${r.temps} · ${r.diff}</div>
+      </div>
+      <button class="close-btn" onclick="closeModalBtn()">✕</button>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Ingrédients (pour ${r.portions} personne${r.portions>1?'s':''})</div>
+      <div class="ingredient-list">
+        ${r.ingredients.map(ing=>`
+          <div class="ingredient-row">
+            <span class="ingredient-name">${ing.n}</span>
+            <div class="ingredient-right">
+              <span class="ingredient-qty">${ing.q}g</span>
+              <span class="ingredient-kcal">${Math.round(ing.k*ing.q/100)} kcal</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="total-bar">
+        <span class="total-label">Total par personne</span>
+        <span class="total-val">~${total} kcal</span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Préparation</div>
+      <div class="steps-list">
+        ${r.steps.map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><div>${s}</div></div>`).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModalBtn(){document.getElementById('modal-bg').classList.remove('open');}
+function closeModal(e){if(e.target===document.getElementById('modal-bg'))closeModalBtn();}
+
+renderPays();
+</script>
+</body>
+</html>
