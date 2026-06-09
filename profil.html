@@ -14,23 +14,15 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;padding:1re
 .logo-text{font-size:16px;font-weight:900;letter-spacing:-0.5px}.logo-text span{color:#00FF87}
 .card{background:#111;border:0.5px solid #1a1a1a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
 .section-title{font-weight:700;font-size:14px;margin-bottom:12px;letter-spacing:-0.3px}
-
-/* HERO PROFIL */
-.profil-hero{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;background:#111;border:0.5px solid #1a1a1a;border-radius:16px;padding:1.25rem}
+.profil-hero{display:flex;align-items:center;gap:1rem;margin-bottom:12px;background:#111;border:0.5px solid #1a1a1a;border-radius:16px;padding:1.25rem}
 .profil-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;flex-shrink:0}
-.avatar-kamal{background:rgba(0,255,135,0.15);color:#00FF87;border:2px solid rgba(0,255,135,0.3)}
-.avatar-alicia{background:rgba(255,100,150,0.15);color:#ff6496;border:2px solid rgba(255,100,150,0.3)}
 .profil-info h2{font-size:22px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px}
 .profil-info p{font-size:13px;color:#555}
 .profil-badge{display:inline-block;margin-top:6px;font-size:11px;padding:2px 10px;border-radius:99px;font-weight:600;background:rgba(0,255,135,0.1);color:#00FF87}
-
-/* STATS GLOBALES */
 .stats-global{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
 .stat-glob{background:#111;border:0.5px solid #1a1a1a;border-radius:10px;padding:12px;text-align:center}
 .stat-glob-val{font-size:22px;font-weight:700;margin-bottom:2px}
 .stat-glob-label{font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
-
-/* NOTIFICATIONS */
 .notif{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:8px;font-size:13px;line-height:1.5}
 .notif-ok{background:rgba(0,255,135,0.05);border:0.5px solid rgba(0,255,135,0.15)}
 .notif-warn{background:rgba(239,159,39,0.05);border:0.5px solid rgba(239,159,39,0.15)}
@@ -38,25 +30,16 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;padding:1re
 .notif-icon{font-size:18px;flex-shrink:0}
 .notif-text strong{display:block;font-weight:700;margin-bottom:2px}
 .notif-text span{color:#666}
-
-/* GRAPHIQUE */
 .chart-wrap{height:160px;margin-top:8px}
-
-/* STREAKS */
 .streak-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #1a1a1a;font-size:13px}
 .streak-row:last-child{border-bottom:none}
 .streak-label{color:#888}
 .streak-val{font-weight:700;color:#00FF87}
-
-/* SWITCH PROFIL */
-.switch-profils{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.switch-btn{padding:10px;border:1.5px solid #222;border-radius:12px;background:transparent;color:#888;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s}
+.switch-profils{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.switch-btn{padding:8px 16px;border:1.5px solid #222;border-radius:99px;background:transparent;color:#888;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all 0.2s}
 .switch-btn:hover{border-color:#444;color:#f0f0f0}
 .switch-btn.active{border-color:#00FF87;color:#00FF87;background:rgba(0,255,135,0.05)}
-.mini-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-.mini-k{background:rgba(0,255,135,0.15);color:#00FF87}
-.mini-a{background:rgba(255,100,150,0.15);color:#ff6496}
-
+.mini-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
 .no-profile{text-align:center;padding:3rem 1rem}
 .no-profile h2{font-size:20px;font-weight:700;margin-bottom:8px}
 .no-profile p{color:#555;font-size:14px;margin-bottom:1.5rem}
@@ -79,229 +62,198 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;padding:1re
 </div>
 
 <div id="app" style="display:none">
-
-  <!-- SWITCH PROFIL -->
-  <div class="switch-profils">
-    <button class="switch-btn" id="btn-kamal" onclick="switchProfil('kamal')">
-      <div class="mini-avatar mini-k">K</div> Kamal
-    </button>
-    <button class="switch-btn" id="btn-alicia" onclick="switchProfil('alicia')">
-      <div class="mini-avatar mini-a">A</div> Alicia
-    </button>
-  </div>
-
-  <!-- HERO -->
+  <div class="switch-profils" id="switch-profils"></div>
   <div class="profil-hero" id="profil-hero"></div>
-
-  <!-- STATS GLOBALES -->
   <div class="stats-global" id="stats-global"></div>
-
-  <!-- NOTIFICATIONS -->
   <div class="card">
     <p class="section-title">💬 Notifications & conseils</p>
     <div id="notifs"></div>
   </div>
-
-  <!-- STREAKS -->
   <div class="card">
     <p class="section-title">🔥 Régularité</p>
     <div id="streaks"></div>
   </div>
-
-  <!-- GRAPHIQUE CALORIES 7J -->
   <div class="card">
     <p class="section-title">📊 Calories — 7 derniers jours</p>
     <div class="chart-wrap"><canvas id="chart-kcal"></canvas></div>
   </div>
-
-  <!-- GRAPHIQUE RUNNING -->
   <div class="card">
     <p class="section-title">🏃 Running — progression allure</p>
-    <div class="chart-wrap"><canvas id="chart-run"></canvas></div>
+    <div class="chart-wrap" id="chart-run-wrap"><canvas id="chart-run"></canvas></div>
   </div>
-
 </div>
 
 <script>
-const PROFILES={
-  kamal:{name:'Kamal',avatarClass:'avatar-kamal',initial:'K',goal:2000,protGoal:140,objectif:'Objectif : 75 kg'},
-  alicia:{name:'Alicia',avatarClass:'avatar-alicia',initial:'A',goal:1600,protGoal:100,objectif:'Objectif forme'},
-};
+const COLORS=[
+  {bg:'rgba(0,255,135,0.15)',color:'#00FF87'},
+  {bg:'rgba(255,100,150,0.15)',color:'#ff6496'},
+  {bg:'rgba(100,150,255,0.15)',color:'#6496ff'},
+  {bg:'rgba(255,165,0,0.15)',color:'#ffa500'},
+  {bg:'rgba(200,100,255,0.15)',color:'#c864ff'},
+  {bg:'rgba(255,80,80,0.15)',color:'#ff5050'},
+  {bg:'rgba(0,200,255,0.15)',color:'#00c8ff'},
+  {bg:'rgba(255,220,0,0.15)',color:'#ffdc00'},
+  {bg:'rgba(100,220,100,0.15)',color:'#64dc64'},
+  {bg:'rgba(255,150,50,0.15)',color:'#ff9632'},
+];
 
+let profiles=JSON.parse(localStorage.getItem('fittrack_profiles')||'[]');
 let currentUser=localStorage.getItem('fittrack_user')||null;
 let chartKcalInstance=null;
 let chartRunInstance=null;
 
-if(!currentUser){
+if(!profiles.length||!currentUser){
   document.getElementById('no-profile').style.display='block';
 } else {
   document.getElementById('app').style.display='block';
+  renderSwitchBtns();
   renderProfil(currentUser);
 }
 
-function switchProfil(user){
-  currentUser=user;
-  localStorage.setItem('fittrack_user',user);
-  renderProfil(user);
-}
-
+function getColor(p){return COLORS[p.colorIdx||0];}
+function getInitial(name){return name?name[0].toUpperCase():'?';}
 function today(){return new Date().toISOString().slice(0,10);}
-
 function getDays(n){
   const days=[];
   for(let i=n-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));}
   return days;
 }
 
-function renderProfil(user){
-  const profile=PROFILES[user];
-  const calEntries=JSON.parse(localStorage.getItem('cal_entries_'+user)||'[]');
-  const runSessions=JSON.parse(localStorage.getItem('run_sessions_'+user)||'[]');
-  const goalKcal=parseInt(localStorage.getItem('cal_goal_'+user)||profile.goal);
-  const goalProt=parseInt(localStorage.getItem('cal_prot_goal_'+user)||profile.protGoal);
+function renderSwitchBtns(){
+  document.getElementById('switch-profils').innerHTML=profiles.map(p=>{
+    const c=getColor(p);
+    return `<button class="switch-btn${currentUser===p.id?' active':''}" onclick="switchProfil('${p.id}')">
+      <div class="mini-avatar" style="background:${c.bg};color:${c.color}">${getInitial(p.name)}</div>
+      ${p.name}
+    </button>`;
+  }).join('');
+}
 
-  // Switch buttons
-  document.querySelectorAll('.switch-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('btn-'+user).classList.add('active');
+function switchProfil(id){
+  currentUser=id;
+  localStorage.setItem('fittrack_user',id);
+  renderSwitchBtns();
+  renderProfil(id);
+}
 
-  // HERO
+function renderProfil(userId){
+  const profile=profiles.find(p=>p.id===userId);
+  if(!profile)return;
+  const c=getColor(profile);
+  const calEntries=JSON.parse(localStorage.getItem('cal_entries_'+userId)||'[]');
+  const runSessions=JSON.parse(localStorage.getItem('run_sessions_'+userId)||'[]');
+  const goalKcal=parseInt(localStorage.getItem('cal_goal_'+userId)||profile.goal||2000);
+  const goalProt=parseInt(localStorage.getItem('cal_prot_goal_'+userId)||profile.protGoal||120);
+
   const joursCalories=new Set(calEntries.map(e=>e.date)).size;
-  const joursRunning=runSessions.length;
   document.getElementById('profil-hero').innerHTML=`
-    <div class="profil-avatar ${profile.avatarClass}">${profile.initial}</div>
+    <div class="profil-avatar" style="background:${c.bg};color:${c.color};border:2px solid ${c.color}40">${getInitial(profile.name)}</div>
     <div class="profil-info">
       <h2>${profile.name}</h2>
-      <p>${profile.objectif}</p>
-      <span class="profil-badge">⚡ ${joursCalories} jours trackés · ${joursRunning} séances running</span>
-    </div>
-  `;
+      <p>${profile.objectif||'Profil FitTrack'}</p>
+      <span class="profil-badge">⚡ ${joursCalories} jours trackés · ${runSessions.length} séances running</span>
+    </div>`;
 
-  // STATS GLOBALES
   const totalKcal=Math.round(calEntries.reduce((s,e)=>s+e.kcal,0));
   const totalProt=Math.round(calEntries.reduce((s,e)=>s+e.prot,0));
   const totalKm=runSessions.reduce((s,r)=>s+r.dist,0).toFixed(1);
   const totalRunCal=runSessions.reduce((s,r)=>s+r.cal,0);
   const moyKcal=joursCalories?Math.round(totalKcal/joursCalories):0;
+
   document.getElementById('stats-global').innerHTML=`
-    <div class="stat-glob"><div class="stat-glob-val" style="color:#00FF87">${totalKcal.toLocaleString()}</div><div class="stat-glob-label">kcal totales</div></div>
-    <div class="stat-glob"><div class="stat-glob-val" style="color:#6496ff">${totalProt}g</div><div class="stat-glob-label">Protéines totales</div></div>
+    <div class="stat-glob"><div class="stat-glob-val" style="color:${c.color}">${totalKcal.toLocaleString()}</div><div class="stat-glob-label">kcal totales</div></div>
+    <div class="stat-glob"><div class="stat-glob-val" style="color:#6496ff">${totalProt}g</div><div class="stat-glob-label">Protéines</div></div>
     <div class="stat-glob"><div class="stat-glob-val">${totalKm}</div><div class="stat-glob-label">km courus</div></div>
-    <div class="stat-glob"><div class="stat-glob-val">${moyKcal}</div><div class="stat-glob-label">Moy kcal/jour</div></div>
-    <div class="stat-glob"><div class="stat-glob-val" style="color:#ffa500">${totalRunCal.toLocaleString()}</div><div class="stat-glob-label">kcal brûlées running</div></div>
-    <div class="stat-glob"><div class="stat-glob-val">${joursRunning}</div><div class="stat-glob-label">Séances running</div></div>
-  `;
+    <div class="stat-glob"><div class="stat-glob-val">${moyKcal}</div><div class="stat-glob-label">Moy kcal/j</div></div>
+    <div class="stat-glob"><div class="stat-glob-val" style="color:#ffa500">${totalRunCal.toLocaleString()}</div><div class="stat-glob-label">kcal running</div></div>
+    <div class="stat-glob"><div class="stat-glob-val">${runSessions.length}</div><div class="stat-glob-label">Séances</div></div>`;
 
-  // NOTIFICATIONS
-  renderNotifs(calEntries,runSessions,goalKcal,goalProt,user);
-
-  // STREAKS
-  renderStreaks(calEntries,runSessions);
-
-  // GRAPHIQUES
-  renderChartKcal(calEntries,goalKcal);
-  renderChartRun(runSessions);
+  renderNotifs(calEntries,runSessions,goalKcal,goalProt,c);
+  renderStreaks(calEntries,runSessions,goalKcal);
+  renderChartKcal(calEntries,goalKcal,c);
+  renderChartRun(runSessions,c);
 }
 
-function renderNotifs(calEntries,runSessions,goalKcal,goalProt,user){
+function renderNotifs(calEntries,runSessions,goalKcal,goalProt,c){
   const notifs=[];
   const tod=today();
   const todayEntries=calEntries.filter(e=>e.date===tod);
   const todayKcal=Math.round(todayEntries.reduce((s,e)=>s+e.kcal,0));
   const todayProt=Math.round(todayEntries.reduce((s,e)=>s+e.prot,0));
 
-  // Calories aujourd'hui
-  if(todayEntries.length===0){
-    notifs.push({type:'warn',icon:'🍽️',title:'Aucun repas enregistré aujourd\'hui',text:'Lance le compteur de calories pour commencer le suivi !'});
+  if(!todayEntries.length){
+    notifs.push({type:'warn',icon:'🍽️',title:'Aucun repas enregistré aujourd\'hui',text:'Lance le compteur de calories pour commencer !'});
   } else if(todayKcal>=goalKcal){
-    notifs.push({type:'ok',icon:'✅',title:'Objectif calories atteint !',text:`Tu as consommé ${todayKcal} kcal sur ${goalKcal} kcal visés aujourd'hui.`});
+    notifs.push({type:'ok',icon:'✅',title:'Objectif calories atteint !',text:`${todayKcal} kcal sur ${goalKcal} kcal visés.`});
   } else {
-    const reste=goalKcal-todayKcal;
-    notifs.push({type:'info',icon:'🔥',title:`${todayKcal} kcal aujourd'hui`,text:`Il te reste ${reste} kcal à consommer pour atteindre ton objectif.`});
+    notifs.push({type:'info',icon:'🔥',title:`${todayKcal} kcal aujourd'hui`,text:`Il te reste ${goalKcal-todayKcal} kcal pour atteindre ton objectif.`});
   }
 
-  // Protéines aujourd'hui
-  if(todayEntries.length>0){
+  if(todayEntries.length){
     if(todayProt>=goalProt){
-      notifs.push({type:'ok',icon:'💪',title:'Objectif protéines atteint !',text:`${todayProt}g de protéines consommées. Excellent pour la récupération musculaire !`});
+      notifs.push({type:'ok',icon:'💪',title:'Objectif protéines atteint !',text:`${todayProt}g / ${goalProt}g. Parfait pour la récupération !`});
     } else {
-      notifs.push({type:'warn',icon:'💪',title:`Protéines : ${todayProt}g / ${goalProt}g`,text:`Il te manque ${goalProt-todayProt}g de protéines. Pense à ajouter du skyr, du poulet ou du thon.`});
+      notifs.push({type:'warn',icon:'💪',title:`Protéines : ${todayProt}g / ${goalProt}g`,text:`Il manque ${goalProt-todayProt}g. Pense au skyr, poulet ou thon.`});
     }
   }
 
-  // Running cette semaine
   const now=new Date();
   const weekStart=new Date(now);
   weekStart.setDate(now.getDate()-now.getDay()+1);
   const weekStr=weekStart.toISOString().slice(0,10);
   const sessionsWeek=runSessions.filter(s=>s.date>=weekStr);
-  if(sessionsWeek.length===0){
+  if(!sessionsWeek.length){
     notifs.push({type:'warn',icon:'🏃',title:'Pas de running cette semaine',text:'Lance une séance pour maintenir ta progression !'});
   } else {
     const kmWeek=sessionsWeek.reduce((s,r)=>s+r.dist,0).toFixed(1);
-    notifs.push({type:'ok',icon:'🏃',title:`${sessionsWeek.length} séance${sessionsWeek.length>1?'s':''} cette semaine`,text:`${kmWeek} km parcourus cette semaine. Continue comme ça !`});
+    notifs.push({type:'ok',icon:'🏃',title:`${sessionsWeek.length} séance${sessionsWeek.length>1?'s':''} cette semaine`,text:`${kmWeek} km parcourus. Continue !`});
   }
 
-  // Régularité calories
   const days7=getDays(7);
   const joursTrackes=days7.filter(d=>calEntries.some(e=>e.date===d)).length;
   if(joursTrackes>=6){
-    notifs.push({type:'ok',icon:'🔥',title:`Streak de ${joursTrackes}/7 jours !`,text:'Excellente régularité sur les 7 derniers jours. Continue !'});
+    notifs.push({type:'ok',icon:'🔥',title:`Streak ${joursTrackes}/7 jours !`,text:'Excellente régularité sur la semaine !'});
   } else if(joursTrackes>=4){
-    notifs.push({type:'info',icon:'📊',title:`${joursTrackes}/7 jours trackés cette semaine`,text:'Bonne régularité ! Essaie de tracker tous les jours pour un suivi optimal.'});
+    notifs.push({type:'info',icon:'📊',title:`${joursTrackes}/7 jours trackés`,text:'Bonne régularité ! Essaie de tracker tous les jours.'});
   }
 
-  const el=document.getElementById('notifs');
-  if(!notifs.length){el.innerHTML='<div class="empty">Tout est nickel ! 🎉</div>';return;}
-  el.innerHTML=notifs.map(n=>`
+  document.getElementById('notifs').innerHTML=notifs.map(n=>`
     <div class="notif notif-${n.type}">
       <div class="notif-icon">${n.icon}</div>
       <div class="notif-text"><strong>${n.title}</strong><span>${n.text}</span></div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function renderStreaks(calEntries,runSessions){
-  const days=getDays(30);
-
-  // Streak calories actuel
-  let streakCal=0;
+function renderStreaks(calEntries,runSessions,goalKcal){
   const allDates=new Set(calEntries.map(e=>e.date));
+  let streakCal=0;
   for(let i=0;i<30;i++){
     const d=new Date();d.setDate(d.getDate()-i);
     if(allDates.has(d.toISOString().slice(0,10)))streakCal++;
     else break;
   }
-
-  // Meilleur streak
   let bestStreak=0,cur=0;
-  days.forEach(d=>{
-    if(allDates.has(d)){cur++;bestStreak=Math.max(bestStreak,cur);}
-    else cur=0;
-  });
+  getDays(30).forEach(d=>{if(allDates.has(d)){cur++;bestStreak=Math.max(bestStreak,cur);}else cur=0;});
 
-  // Jours avec objectif atteint cette semaine
   const days7=getDays(7);
-  const goalKcal=2000;
-  const joursObjectif=days7.filter(d=>{
-    const kcal=Math.round(calEntries.filter(e=>e.date===d).reduce((s,e)=>s+e.kcal,0));
-    return kcal>0 && kcal<=goalKcal*1.1;
+  const joursObj=days7.filter(d=>{
+    const k=Math.round(calEntries.filter(e=>e.date===d).reduce((s,e)=>s+e.kcal,0));
+    return k>0&&k<=goalKcal*1.1;
   }).length;
 
-  // Séances running ce mois
   const moisStr=new Date().toISOString().slice(0,7);
-  const sessionsMois=runSessions.filter(s=>s.date.startsWith(moisStr)).length;
-  const kmMois=runSessions.filter(s=>s.date.startsWith(moisStr)).reduce((s,r)=>s+r.dist,0).toFixed(1);
+  const sessionsMois=runSessions.filter(s=>s.date.startsWith(moisStr));
+  const kmMois=sessionsMois.reduce((s,r)=>s+r.dist,0).toFixed(1);
 
   document.getElementById('streaks').innerHTML=`
-    <div class="streak-row"><span class="streak-label">🔥 Streak actuel (jours consécutifs)</span><span class="streak-val">${streakCal} jour${streakCal>1?'s':''}</span></div>
-    <div class="streak-row"><span class="streak-label">🏆 Meilleur streak (30 jours)</span><span class="streak-val">${bestStreak} jour${bestStreak>1?'s':''}</span></div>
-    <div class="streak-row"><span class="streak-label">✅ Jours objectif atteint (7j)</span><span class="streak-val">${joursObjectif}/7</span></div>
-    <div class="streak-row"><span class="streak-label">🏃 Séances running ce mois</span><span class="streak-val">${sessionsMois} séance${sessionsMois>1?'s':''}</span></div>
-    <div class="streak-row"><span class="streak-label">📍 Km courus ce mois</span><span class="streak-val">${kmMois} km</span></div>
-  `;
+    <div class="streak-row"><span class="streak-label">🔥 Streak actuel</span><span class="streak-val">${streakCal} jour${streakCal>1?'s':''}</span></div>
+    <div class="streak-row"><span class="streak-label">🏆 Meilleur streak (30j)</span><span class="streak-val">${bestStreak} jour${bestStreak>1?'s':''}</span></div>
+    <div class="streak-row"><span class="streak-label">✅ Jours objectif atteint (7j)</span><span class="streak-val">${joursObj}/7</span></div>
+    <div class="streak-row"><span class="streak-label">🏃 Séances ce mois</span><span class="streak-val">${sessionsMois.length}</span></div>
+    <div class="streak-row"><span class="streak-label">📍 Km ce mois</span><span class="streak-val">${kmMois} km</span></div>`;
 }
 
-function renderChartKcal(calEntries,goalKcal){
+function renderChartKcal(calEntries,goalKcal,c){
   const days=getDays(7);
   const labels=days.map(d=>{const p=d.split('-');return p[2]+'/'+p[1];});
   const vals=days.map(d=>Math.round(calEntries.filter(e=>e.date===d).reduce((s,e)=>s+e.kcal,0)));
@@ -309,43 +261,26 @@ function renderChartKcal(calEntries,goalKcal){
   if(chartKcalInstance)chartKcalInstance.destroy();
   chartKcalInstance=new Chart(ctx,{
     data:{labels,datasets:[
-      {type:'bar',data:vals,backgroundColor:vals.map(v=>v>goalKcal?'rgba(226,75,74,0.7)':'rgba(0,255,135,0.5)'),borderRadius:6},
-      {type:'line',data:days.map(()=>goalKcal),borderColor:'#00FF87',borderDash:[5,5],pointRadius:0,borderWidth:1.5}
+      {type:'bar',data:vals,backgroundColor:vals.map(v=>v>goalKcal?'rgba(226,75,74,0.7)':c.color+'80'),borderRadius:6},
+      {type:'line',data:days.map(()=>goalKcal),borderColor:c.color,borderDash:[5,5],pointRadius:0,borderWidth:1.5}
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#444',font:{size:11}}},y:{ticks:{color:'#444',font:{size:11}},grid:{color:'#1a1a1a'}}}}
   });
 }
 
-function formatRythme(secPerKm){
-  const m=Math.floor(secPerKm/60);
-  const s=Math.round(secPerKm%60);
-  return m+"'"+String(s).padStart(2,'0')+'"';
-}
+function formatRythme(s){const m=Math.floor(s/60);const sec=Math.round(s%60);return m+"'"+String(sec).padStart(2,'0')+'"';}
+function rythmeToSec(str){if(!str||str==='—')return 0;const c=str.replace('"','').split("'");return parseInt(c[0])*60+(parseInt(c[1])||0);}
 
-function rythmeToSec(str){
-  if(!str||str==='—')return 0;
-  const clean=str.replace('"','');
-  const parts=clean.split("'");
-  return parseInt(parts[0])*60+(parseInt(parts[1])||0);
-}
-
-function renderChartRun(runSessions){
+function renderChartRun(runSessions,c){
   const sorted=[...runSessions].filter(s=>s.rythme&&s.rythme!=='—').sort((a,b)=>a.date.localeCompare(b.date)).slice(-8);
-  const ctx=document.getElementById('chart-run');
+  const wrap=document.getElementById('chart-run-wrap');
   if(chartRunInstance)chartRunInstance.destroy();
-  if(sorted.length<2){
-    ctx.parentElement.innerHTML='<p style="font-size:13px;color:#444;text-align:center;padding:1.5rem">Ajoute au moins 2 séances running pour voir la progression.</p>';
-    return;
-  }
-  const labels=sorted.map(s=>s.date.split('-').slice(1).reverse().join('/'));
-  const vals=sorted.map(s=>rythmeToSec(s.rythme));
+  if(sorted.length<2){wrap.innerHTML='<p style="font-size:13px;color:#444;text-align:center;padding:1.5rem">Ajoute au moins 2 séances pour voir la progression.</p>';return;}
+  if(!wrap.querySelector('canvas'))wrap.innerHTML='<canvas id="chart-run"></canvas>';
+  const ctx=document.getElementById('chart-run').getContext('2d');
   chartRunInstance=new Chart(ctx,{
-    data:{labels,datasets:[{type:'line',data:vals,borderColor:'#00FF87',backgroundColor:'rgba(0,255,135,0.05)',borderWidth:2,pointBackgroundColor:'#00FF87',pointRadius:5,tension:0.3,fill:true}]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>formatRythme(c.raw)+' /km'}}},
-      scales:{x:{ticks:{color:'#444',font:{size:11}},grid:{color:'#1a1a1a'}},y:{reverse:true,ticks:{color:'#444',font:{size:11},callback:v=>formatRythme(v)},grid:{color:'#1a1a1a'}}}
-    }
+    data:{labels:sorted.map(s=>s.date.split('-').slice(1).reverse().join('/')),datasets:[{type:'line',data:sorted.map(s=>rythmeToSec(s.rythme)),borderColor:c.color,backgroundColor:c.color+'10',borderWidth:2,pointBackgroundColor:c.color,pointRadius:5,tension:0.3,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>formatRythme(ctx.raw)+' /km'}}},scales:{x:{ticks:{color:'#444',font:{size:11}},grid:{color:'#1a1a1a'}},y:{reverse:true,ticks:{color:'#444',font:{size:11},callback:v=>formatRythme(v)},grid:{color:'#1a1a1a'}}}}
   });
 }
 </script>
