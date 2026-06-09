@@ -126,7 +126,11 @@ input:focus,select:focus{outline:none;border-color:#00FF87}
 
   <div class="card">
     <p class="section-title">7 derniers jours</p>
+    <p style="font-size:12px;color:#555;margin-bottom:8px">Clique sur une barre pour voir le détail</p>
     <div class="chart-wrap"><canvas id="chart7"></canvas></div>
+    <div id="histo-detail" style="display:none;margin-top:1rem;border-top:0.5px solid #1a1a1a;padding-top:1rem">
+      <div id="histo-detail-content"></div>
+    </div>
   </div>
 </div>
 
@@ -141,6 +145,7 @@ const DB=[
   {n:"Madeleine industrielle",k:430,p:6,portions:[{l:"1 madeleine",g:30},{l:"2 madeleines",g:60}]},
   {n:"Biscuit Lu Petit Beurre",k:440,p:6,portions:[{l:"1 biscuit",g:8},{l:"4 biscuits",g:32}]},
   {n:"Biscuit gateau sec",k:450,p:7,portions:[{l:"1 biscuit",g:15},{l:"3 biscuits",g:45}]},
+  {n:"Biscuits savoiardi",k:380,p:7,portions:[{l:"1 biscuit",g:12},{l:"4 biscuits",g:48}]},
   // FECULENTS
   {n:"Frites maison",k:312,p:4,portions:[{l:"1 portion",g:150},{l:"petite portion",g:100}]},
   {n:"Frites surgelees au four",k:190,p:3,portions:[{l:"1 portion",g:150}]},
@@ -149,6 +154,8 @@ const DB=[
   {n:"Patate douce au four",k:90,p:2,portions:[{l:"1 patate douce",g:200},{l:"1/2 patate douce",g:100}]},
   {n:"Puree de pomme de terre",k:100,p:2,portions:[{l:"1 portion",g:200}]},
   {n:"Riz cuit",k:130,p:3,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
+  {n:"Riz basmati cuit",k:130,p:3,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
+  {n:"Riz gluant cuit",k:175,p:3,portions:[{l:"1 portion 150g",g:150}]},
   {n:"Pates cuites",k:158,p:6,portions:[{l:"1 portion 180g",g:180}]},
   {n:"Semoule cuite",k:112,p:4,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
   {n:"Boulgour cuit",k:111,p:4,portions:[{l:"1 portion 180g",g:180}]},
@@ -156,7 +163,11 @@ const DB=[
   {n:"Quinoa cuit",k:120,p:4,portions:[{l:"1 portion 150g",g:150}]},
   {n:"Flocons avoine",k:370,p:13,portions:[{l:"1 portion 50g",g:50},{l:"1 portion 80g",g:80}]},
   {n:"Lentilles cuites",k:116,p:9,portions:[{l:"1 portion 150g",g:150}]},
-  {n:"Pois chiches cuits",k:164,p:9,portions:[{l:"1 portion 150g",g:150}]},
+  {n:"Lentilles rouges cuites",k:116,p:9,portions:[{l:"1 portion 150g",g:150}]},
+  {n:"Lentilles noires cuites",k:116,p:9,portions:[{l:"1 portion 150g",g:150}]},
+  {n:"Pois chiches cuits",k:164,p:9,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
+  {n:"Nouilles de riz",k:350,p:6,portions:[{l:"1 portion 80g",g:80},{l:"1 portion 100g",g:100}]},
+  {n:"Nouilles aux oeufs",k:280,p:9,portions:[{l:"1 portion 80g",g:80},{l:"1 portion 100g",g:100}]},
   // PRODUITS LAITIERS & OEUFS
   {n:"Skyr nature",k:65,p:11,portions:[{l:"1 pot 150g",g:150},{l:"1 pot 200g",g:200}]},
   {n:"Skyr Siggys aux fruits",k:80,p:9,portions:[{l:"1 pot 140g",g:140}]},
@@ -167,10 +178,18 @@ const DB=[
   {n:"Gouda",k:356,p:25,portions:[{l:"1 tranche",g:25},{l:"2 tranches",g:50}]},
   {n:"Emmental",k:382,p:28,portions:[{l:"1 tranche",g:25}]},
   {n:"Comte",k:413,p:27,portions:[{l:"1 tranche",g:25},{l:"2 tranches",g:50},{l:"1 portion 30g",g:30}]},
+  {n:"Gruyere",k:413,p:29,portions:[{l:"1 tranche",g:25},{l:"2 tranches",g:50}]},
+  {n:"Mozzarella",k:280,p:18,portions:[{l:"1/2 boule",g:62},{l:"1 boule",g:125}]},
+  {n:"Feta",k:260,p:14,portions:[{l:"1 portion 50g",g:50},{l:"1 portion 100g",g:100}]},
+  {n:"Parmesan",k:400,p:36,portions:[{l:"1 cs rape",g:10},{l:"1 portion 30g",g:30}]},
+  {n:"Pecorino",k:390,p:32,portions:[{l:"1 cs rape",g:10}]},
+  {n:"Mascarpone",k:400,p:5,portions:[{l:"1 portion 100g",g:100}]},
   {n:"Lait demi-ecreme",k:47,p:3,portions:[{l:"1 verre 200ml",g:200}]},
+  {n:"Lait de coco",k:180,p:2,portions:[{l:"100ml",g:100},{l:"1 boite 400ml",g:400}]},
   {n:"Oeuf entier",k:155,p:13,portions:[{l:"1 oeuf moyen",g:55},{l:"2 oeufs",g:110}]},
   {n:"Oeufs brouilles beurre",k:170,p:12,portions:[{l:"2 oeufs",g:120},{l:"3 oeufs",g:180}]},
   {n:"Blanc oeuf",k:52,p:11,portions:[{l:"1 blanc",g:35}]},
+  {n:"Paneer",k:265,p:18,portions:[{l:"1 portion 100g",g:100}]},
   // VIANDES & POISSONS
   {n:"Poulet grille",k:165,p:31,portions:[{l:"1 blanc 150g",g:150},{l:"1 filet 120g",g:120}]},
   {n:"Pilon de poulet",k:175,p:22,portions:[{l:"1 pilon",g:90},{l:"2 pilons",g:180}]},
@@ -178,13 +197,18 @@ const DB=[
   {n:"Dinde",k:135,p:29,portions:[{l:"1 tranche",g:80}]},
   {n:"Boeuf steak grille",k:172,p:28,portions:[{l:"1 steak 150g",g:150},{l:"1 steak 200g",g:200}]},
   {n:"Boeuf hache cuit",k:215,p:26,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
+  {n:"Agneau hache",k:200,p:17,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
+  {n:"Agneau morceaux",k:200,p:20,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
   {n:"Steak hache 5 pourcent",k:120,p:21,portions:[{l:"1 steak 100g",g:100},{l:"1 steak 130g",g:130}]},
   {n:"Steak hache 15 pourcent",k:195,p:18,portions:[{l:"1 steak 100g",g:100},{l:"1 steak 130g",g:130}]},
+  {n:"Merguez",k:310,p:14,portions:[{l:"1 merguez",g:60},{l:"2 merguez",g:120}]},
   {n:"Thon en boite",k:116,p:26,portions:[{l:"1/2 boite 70g",g:70},{l:"1 boite 140g",g:140}]},
   {n:"Saumon frais",k:208,p:20,portions:[{l:"1 pave 150g",g:150}]},
   {n:"Saumon fume",k:172,p:25,portions:[{l:"1 tranche 30g",g:30},{l:"2 tranches",g:60},{l:"1 portion 80g",g:80}]},
   {n:"Crevettes surgelees cuites",k:99,p:21,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
   {n:"Fruits de mer melange",k:80,p:15,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
+  {n:"Tofu ferme",k:145,p:15,portions:[{l:"1 portion 100g",g:100}]},
+  {n:"Tempeh",k:195,p:19,portions:[{l:"1 portion 100g",g:100}]},
   // PLATS COMPOSES
   {n:"Hachis parmentier Picard boeuf",k:112,p:6,portions:[{l:"1 portion 300g",g:300},{l:"1 portion 400g",g:400}]},
   {n:"Burger maison pain brioché steak mayo gouda",k:280,p:18,portions:[{l:"1 burger complet",g:300}]},
@@ -193,19 +217,32 @@ const DB=[
   {n:"Poelee legumes surgelee",k:55,p:3,portions:[{l:"1 portion 200g",g:200},{l:"1 portion 300g",g:300}]},
   // LEGUMES
   {n:"Tomate",k:18,p:1,portions:[{l:"1 tomate",g:120},{l:"2 tomates",g:240}]},
+  {n:"Tomate cerise",k:18,p:1,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
   {n:"Salade verte",k:15,p:1,portions:[{l:"1 portion",g:50}]},
+  {n:"Mache",k:21,p:2,portions:[{l:"1 portion",g:50},{l:"1 grosse portion",g:80}]},
   {n:"Courgette",k:17,p:1,portions:[{l:"1 courgette",g:200}]},
   {n:"Brocoli cuit",k:35,p:3,portions:[{l:"1 portion 150g",g:150}]},
   {n:"Haricots verts cuits",k:31,p:2,portions:[{l:"1 portion 150g",g:150}]},
+  {n:"Epinards frais",k:23,p:3,portions:[{l:"1 portion 100g",g:100},{l:"1 grosse portion",g:200}]},
   {n:"Epinards cuits",k:23,p:3,portions:[{l:"1 portion 150g",g:150}]},
   {n:"Carottes",k:41,p:1,portions:[{l:"1 carotte",g:80},{l:"2 carottes",g:160}]},
   {n:"Poivron",k:31,p:1,portions:[{l:"1 poivron",g:150}]},
+  {n:"Poivron rouge",k:31,p:1,portions:[{l:"1 poivron",g:150}]},
   {n:"Champignons",k:22,p:3,portions:[{l:"1 portion 100g",g:100}]},
   {n:"Oignon",k:40,p:1,portions:[{l:"1 oignon",g:80}]},
+  {n:"Oignon rouge",k:40,p:1,portions:[{l:"1 oignon",g:80}]},
+  {n:"Echalote",k:72,p:2,portions:[{l:"1 echalote",g:30}]},
   {n:"Concombre",k:16,p:1,portions:[{l:"1/2 concombre",g:150}]},
   {n:"Avocat",k:160,p:2,portions:[{l:"1/2 avocat",g:75},{l:"1 avocat",g:150}]},
   {n:"Mais en boite",k:86,p:3,portions:[{l:"1 portion 80g",g:80}]},
   {n:"Petits pois",k:81,p:5,portions:[{l:"1 portion 100g",g:100}]},
+  {n:"Aubergine",k:25,p:1,portions:[{l:"1/2 aubergine",g:150},{l:"1 aubergine",g:300}]},
+  {n:"Pousses de soja",k:30,p:3,portions:[{l:"1 portion 100g",g:100}]},
+  {n:"Papaye verte",k:43,p:1,portions:[{l:"1 portion 150g",g:150}]},
+  {n:"Ail",k:149,p:6,portions:[{l:"1 gousse",g:5},{l:"2 gousses",g:10}]},
+  {n:"Gingembre frais",k:80,p:2,portions:[{l:"1 cm",g:10}]},
+  {n:"Citronnelle",k:99,p:2,portions:[{l:"1 tige",g:20}]},
+  {n:"Piment rouge frais",k:31,p:1,portions:[{l:"1 piment",g:15}]},
   // FRUITS
   {n:"Banane",k:89,p:1,portions:[{l:"1 banane moyenne",g:120},{l:"1 grande",g:150}]},
   {n:"Pomme",k:52,p:0,portions:[{l:"1 pomme",g:150}]},
@@ -213,97 +250,56 @@ const DB=[
   {n:"Peche",k:42,p:1,portions:[{l:"1 peche",g:150},{l:"1 grosse peche",g:200}]},
   {n:"Fraises",k:32,p:1,portions:[{l:"1 portion 150g",g:150}]},
   {n:"Myrtilles",k:57,p:1,portions:[{l:"1 portion 100g",g:100}]},
+  {n:"Mangue fraiche",k:60,p:1,portions:[{l:"1/2 mangue",g:150},{l:"1 mangue",g:300}]},
   {n:"Compote pomme nature",k:48,p:0,portions:[{l:"1 gourde 90g",g:90},{l:"1 pot 100g",g:100}]},
   {n:"Compote pomme fruits rouges",k:52,p:0,portions:[{l:"1 gourde 90g",g:90},{l:"1 pot 100g",g:100}]},
   {n:"Raisin",k:69,p:1,portions:[{l:"1 grappe 150g",g:150}]},
-  {n:"Mangue",k:60,p:1,portions:[{l:"1/2 mangue",g:150}]},
   {n:"Ananas",k:50,p:0,portions:[{l:"1 tranche",g:100}]},
   {n:"Kiwi",k:61,p:1,portions:[{l:"1 kiwi",g:70}]},
   {n:"Poire",k:57,p:0,portions:[{l:"1 poire",g:160}]},
   {n:"Pasteque",k:30,p:1,portions:[{l:"1 tranche",g:200}]},
+  {n:"Citron vert",k:20,p:0,portions:[{l:"1 citron",g:50}]},
   // SNACKS & OLEAGINEUX
   {n:"Amandes nature",k:579,p:21,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Amandes grillees salees",k:597,p:21,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Noix de cajou grillees salees",k:574,p:15,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Noix",k:654,p:15,portions:[{l:"1 poignee 30g",g:30}]},
+  {n:"Pistaches",k:560,p:20,portions:[{l:"1 poignee 30g",g:30}]},
   {n:"Beurre de cacahuete",k:598,p:25,portions:[{l:"1 cs",g:16}]},
+  {n:"Pate d'arachide",k:598,p:25,portions:[{l:"1 cs",g:16},{l:"2 cs",g:32}]},
+  {n:"Tahini",k:590,p:17,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
+  {n:"Olives vertes",k:145,p:1,portions:[{l:"5 olives",g:25},{l:"10 olives",g:50}]},
+  {n:"Olives noires",k:115,p:1,portions:[{l:"5 olives",g:25},{l:"10 olives",g:50}]},
   // BOISSONS & CAFES
   {n:"Espresso",k:2,p:0,portions:[{l:"1 tasse 30ml",g:30}]},
   {n:"Cafe allonge",k:5,p:0,portions:[{l:"1 tasse 200ml",g:200}]},
   {n:"Cafe noir sans sucre",k:2,p:0,portions:[{l:"1 tasse",g:150}]},
+  {n:"Vin blanc sec",k:65,p:0,portions:[{l:"1 verre 100ml",g:100}]},
   // PROTEINES & COMPLEMENTS
   {n:"Whey isolat",k:370,p:88,portions:[{l:"1 dose 30g",g:30}]},
   {n:"Creatine",k:0,p:0,portions:[{l:"1 dose 5g",g:5}]},
   // CONDIMENTS & MATIERES GRASSES
   {n:"Huile olive",k:884,p:0,portions:[{l:"1 cs",g:10}]},
   {n:"Mayonnaise",k:680,p:1,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
-  {n:"Beurre",k:717,p:1,portions:[{l:"1 noix",g:10}]},
-  {n:"Creme fraiche epaisse",k:292,p:2,portions:[{l:"1 cs",g:20},{l:"100ml",g:100}]},// SAUCES & CONDIMENTS SUPPLEMENTAIRES
   {n:"Ketchup",k:112,p:1,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
   {n:"Vinaigrette classique",k:460,p:0,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
   {n:"Sauce vinaigre balsamique",k:88,p:0,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
-  // FROMAGES SUPPLEMENTAIRES
-  {n:"Gruyere",k:413,p:29,portions:[{l:"1 tranche",g:25},{l:"2 tranches",g:50}]},
-  {n:"Mozzarella",k:280,p:18,portions:[{l:"1/2 boule",g:62},{l:"1 boule",g:125}]},
-  // LEGUMES SUPPLEMENTAIRES
-  {n:"Avocat",k:160,p:2,portions:[{l:"1/2 avocat",g:75},{l:"1 avocat",g:150}]},
-  {n:"Mache",k:21,p:2,portions:[{l:"1 portion",g:50},{l:"1 grosse portion",g:80}]},
-  {n:"Tomate cerise",k:18,p:1,portions:[{l:"1 portion",g:100},{l:"1 portion",g:150}]},
-  // INGREDIENTS RECETTES DU MONDE
-  {n:"Lait de coco",k:180,p:2,portions:[{l:"100ml",g:100},{l:"1 boite 400ml",g:400}]},
-  {n:"Pate d'arachide",k:598,p:25,portions:[{l:"1 cs",g:16},{l:"2 cs",g:32}]},
-  {n:"Tahini",k:590,p:17,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
-  {n:"Pois chiches cuits",k:164,p:9,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
-  {n:"Lentilles rouges cuites",k:116,p:9,portions:[{l:"1 portion 150g",g:150}]},
-  {n:"Lentilles noires cuites",k:116,p:9,portions:[{l:"1 portion 150g",g:150}]},
-  {n:"Paneer",k:265,p:18,portions:[{l:"1 portion 100g",g:100}]},
-  {n:"Pate filo brick",k:280,p:7,portions:[{l:"1 feuille",g:25},{l:"2 feuilles",g:50}]},
-  {n:"Noix de coco rapee",k:660,k:6,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
   {n:"Sauce soja",k:60,p:8,portions:[{l:"1 cs",g:15},{l:"2 cs",g:30}]},
   {n:"Sauce fish sauce",k:35,p:5,portions:[{l:"1 cs",g:15}]},
+  {n:"Beurre",k:717,p:1,portions:[{l:"1 noix",g:10}]},
   {n:"Ghee",k:900,p:0,portions:[{l:"1 cs",g:10}]},
-  {n:"Tempeh",k:195,p:19,portions:[{l:"1 portion 100g",g:100}]},
-  {n:"Tofu ferme",k:145,p:15,portions:[{l:"1 portion 100g",g:100}]},
-  {n:"Nouilles de riz",k:350,p:6,portions:[{l:"1 portion 80g",g:80},{l:"1 portion 100g",g:100}]},
-  {n:"Nouilles aux oeufs",k:280,p:9,portions:[{l:"1 portion 80g",g:80},{l:"1 portion 100g",g:100}]},
-  {n:"Riz basmati cuit",k:130,p:3,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
-  {n:"Riz gluant cuit",k:175,p:3,portions:[{l:"1 portion 150g",g:150}]},
-  {n:"Papaye verte",k:43,p:1,portions:[{l:"1 portion 150g",g:150}]},
-  {n:"Mangue fraiche",k:60,p:1,portions:[{l:"1/2 mangue",g:150},{l:"1 mangue",g:300}]},
-  {n:"Citron vert",k:20,p:0,portions:[{l:"1 citron",g:50}]},
-  {n:"Gingembre frais",k:80,p:2,portions:[{l:"1 cm",g:10}]},
-  {n:"Curcuma frais",k:354,p:8,portions:[{l:"1 cc",g:5}]},
-  {n:"Citronnelle",k:99,p:2,portions:[{l:"1 tige",g:20}]},
-  {n:"Piment rouge frais",k:31,p:1,portions:[{l:"1 piment",g:15}]},
-  {n:"Ail",k:149,p:6,portions:[{l:"1 gousse",g:5},{l:"2 gousses",g:10}]},
-  {n:"Oignon rouge",k:40,p:1,portions:[{l:"1 oignon",g:80}]},
-  {n:"Echalote",k:72,p:2,portions:[{l:"1 echalote",g:30}]},
-  {n:"Poivron rouge",k:31,p:1,portions:[{l:"1 poivron",g:150}]},
-  {n:"Aubergine",k:25,p:1,portions:[{l:"1/2 aubergine",g:150},{l:"1 aubergine",g:300}]},
-  {n:"Epinards frais",k:23,p:3,portions:[{l:"1 portion 100g",g:100},{l:"1 grosse portion",g:200}]},
-  {n:"Haricots verts cuits",k:31,p:2,portions:[{l:"1 portion 150g",g:150}]},
-  {n:"Pousses de soja",k:30,p:3,portions:[{l:"1 portion 100g",g:100}]},
+  {n:"Creme fraiche epaisse",k:292,p:2,portions:[{l:"1 cs",g:20},{l:"100ml",g:100}]},
+  {n:"Concentre de tomate",k:80,p:4,portions:[{l:"1 cs",g:20},{l:"2 cs",g:40}]},
+  {n:"Citron confit",k:40,p:1,portions:[{l:"1/4 citron",g:20}]},
+  {n:"Bouillon cube",k:20,p:1,portions:[{l:"1 cube",g:10}]},
+  // EPICES
   {n:"Paprika",k:282,p:14,portions:[{l:"1 cc",g:3}]},
   {n:"Cumin",k:375,p:18,portions:[{l:"1 cc",g:3}]},
   {n:"Coriandre moulue",k:298,p:12,portions:[{l:"1 cc",g:3}]},
   {n:"Garam masala",k:350,p:14,portions:[{l:"1 cc",g:3}]},
   {n:"Cannelle",k:261,p:4,portions:[{l:"1 cc",g:3}]},
-  {n:"Pistaches",k:560,p:20,portions:[{l:"1 poignee 30g",g:30}]},
-  {n:"Mascarpone",k:400,p:5,portions:[{l:"1 portion 100g",g:100}]},
-  {n:"Parmesan",k:400,p:36,portions:[{l:"1 cs rape",g:10},{l:"1 portion 30g",g:30}]},
-  {n:"Pecorino",k:390,p:32,portions:[{l:"1 cs rape",g:10}]},
-  {n:"Biscuits savoiardi",k:380,p:7,portions:[{l:"1 biscuit",g:12},{l:"4 biscuits",g:48}]},
-  {n:"Vin blanc sec",k:65,p:0,portions:[{l:"1 verre 100ml",g:100}]},
   {n:"Safran",k:310,p:11,portions:[{l:"1 pincee 0.5g",g:0.5}]},
-  {n:"Feta",k:260,p:14,portions:[{l:"1 portion 50g",g:50},{l:"1 portion 100g",g:100}]},
-  {n:"Olives vertes",k:145,p:1,portions:[{l:"5 olives",g:25},{l:"10 olives",g:50}]},
-  {n:"Olives noires",k:115,p:1,portions:[{l:"5 olives",g:25},{l:"10 olives",g:50}]},
-  {n:"Merguez",k:310,p:14,portions:[{l:"1 merguez",g:60},{l:"2 merguez",g:120}]},
-  {n:"Agneau hache",k:200,p:17,portions:[{l:"1 portion 100g",g:100},{l:"1 portion 150g",g:150}]},
-  {n:"Agneau morceaux",k:200,p:20,portions:[{l:"1 portion 150g",g:150},{l:"1 portion 200g",g:200}]},
-  {n:"Citron confit",k:40,p:1,portions:[{l:"1/4 citron",g:20}]},
-  {n:"Concentre de tomate",k:80,p:4,portions:[{l:"1 cs",g:20},{l:"2 cs",g:40}]},
-  {n:"Bouillon de poule cube",k:20,p:1,portions:[{l:"1 cube",g:10}]},
+  {n:"Pate filo brick",k:280,p:7,portions:[{l:"1 feuille",g:25},{l:"2 feuilles",g:50}]},
 ];
 
 const PROFILES={
@@ -444,12 +440,60 @@ function init(user){
     if(chart7Instance)chart7Instance.destroy();
     chart7Instance=new Chart(ctx,{
       data:{labels,datasets:[
-        {type:'bar',label:'kcal',data:vals,backgroundColor:vals.map(v=>v>goalKcal?'rgba(226,75,74,0.7)':'rgba(0,255,135,0.5)'),borderRadius:6},
+        {type:'bar',label:'kcal',data:vals,backgroundColor:vals.map(v=>v>goalKcal?'rgba(226,75,74,0.7)':'rgba(0,255,135,0.5)'),borderRadius:6,hoverBackgroundColor:vals.map(v=>v>goalKcal?'rgba(226,75,74,1)':'rgba(0,255,135,0.9)')},
         {type:'line',label:'Objectif',data:days.map(()=>goalKcal),borderColor:'#00FF87',borderDash:[5,5],pointRadius:0,borderWidth:1.5}
       ]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#444',font:{size:11}}},y:{ticks:{color:'#444',font:{size:11}},grid:{color:'#1a1a1a'}}}}
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{x:{ticks:{color:'#444',font:{size:11}}},y:{ticks:{color:'#444',font:{size:11}},grid:{color:'#1a1a1a'}}},
+        onClick:(e,els)=>{
+          if(!els.length)return;
+          const idx=els[0].index;
+          showHistoDetail(days[idx],labels[idx]);
+        }
+      }
     });
   }
+
+  window.showHistoDetail=function(date,label){
+    const dayEntries=entries.filter(e=>e.date===date);
+    const detail=document.getElementById('histo-detail');
+    const content=document.getElementById('histo-detail-content');
+    if(!dayEntries.length){
+      content.innerHTML=`<p style="font-size:13px;color:#444;text-align:center;padding:1rem">Aucun aliment enregistré le ${label}</p>`;
+      detail.style.display='block';
+      return;
+    }
+    const meals=['Petit-déjeuner','Déjeuner','Dîner','Collation'];
+    const totK=Math.round(dayEntries.reduce((s,e)=>s+e.kcal,0));
+    const totP=Math.round(dayEntries.reduce((s,e)=>s+e.prot,0));
+    content.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:14px;font-weight:700">📅 ${label}</div>
+        <div style="display:flex;gap:8px">
+          <span style="font-size:12px;padding:3px 10px;border-radius:99px;background:rgba(0,255,135,0.1);color:#00FF87;font-weight:600">${totK} kcal</span>
+          <span style="font-size:12px;padding:3px 10px;border-radius:99px;background:rgba(100,150,255,0.1);color:#6496ff;font-weight:600">${totP}g prot</span>
+        </div>
+      </div>
+      ${meals.map(m=>{
+        const items=dayEntries.filter(e=>e.meal===m);
+        if(!items.length)return '';
+        const tot=Math.round(items.reduce((s,e)=>s+e.kcal,0));
+        return `<div style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;padding-bottom:4px;border-bottom:0.5px solid #1a1a1a">${m} <span style="color:#00FF87">${tot} kcal</span></div>
+          ${items.map(e=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:0.5px solid #0d0d0d">
+            <span style="flex:1;color:#f0f0f0">${e.name}</span>
+            <span style="color:#444;margin:0 8px">${e.qty}g</span>
+            <span style="font-weight:600;color:#f0f0f0">${e.kcal} kcal</span>
+          </div>`).join('')}
+        </div>`;
+      }).join('')}
+      <button onclick="document.getElementById('histo-detail').style.display='none'" style="width:100%;padding:8px;background:transparent;border:0.5px solid #333;border-radius:8px;color:#555;font-size:12px;cursor:pointer;margin-top:8px;font-family:'Inter',sans-serif">Fermer ✕</button>
+    `;
+    detail.style.display='block';
+    detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
 
   function renderAll(){renderMetrics();renderJournal();renderChart();}
   document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('dropdown').classList.remove('open');});
