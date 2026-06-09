@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack – Profil</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;padding:1rem;max-width:600px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
+.back{color:#555;font-size:13px;text-decoration:none}.back:hover{color:#f0f0f0}
+.logo-text{font-size:16px;font-weight:900;letter-spacing:-0.5px}.logo-text span{color:#00FF87}
+.card{background:#111;border:0.5px solid #1a1a1a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.section-title{font-weight:700;font-size:14px;margin-bottom:12px;letter-spacing:-0.3px}
+
+/* HERO PROFIL */
+.profil-hero{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;background:#111;border:0.5px solid #1a1a1a;border-radius:16px;padding:1.25rem}
+.profil-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;flex-shrink:0}
+.avatar-kamal{background:rgba(0,255,135,0.15);color:#00FF87;border:2px solid rgba(0,255,135,0.3)}
+.avatar-alicia{background:rgba(255,100,150,0.15);color:#ff6496;border:2px solid rgba(255,100,150,0.3)}
+.profil-info h2{font-size:22px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px}
+.profil-info p{font-size:13px;color:#555}
+.profil-badge{display:inline-block;margin-top:6px;font-size:11px;padding:2px 10px;border-radius:99px;font-weight:600;background:rgba(0,255,135,0.1);color:#00FF87}
+
+/* STATS GLOBALES */
+.stats-global{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-glob{background:#111;border:0.5px solid #1a1a1a;border-radius:10px;padding:12px;text-align:center}
+.stat-glob-val{font-size:22px;font-weight:700;margin-bottom:2px}
+.stat-glob-label{font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+
+/* NOTIFICATIONS */
+.notif{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:8px;font-size:13px;line-height:1.5}
+.notif-ok{background:rgba(0,255,135,0.05);border:0.5px solid rgba(0,255,135,0.15)}
+.notif-warn{background:rgba(239,159,39,0.05);border:0.5px solid rgba(239,159,39,0.15)}
+.notif-info{background:rgba(100,150,255,0.05);border:0.5px solid rgba(100,150,255,0.15)}
+.notif-icon{font-size:18px;flex-shrink:0}
+.notif-text strong{display:block;font-weight:700;margin-bottom:2px}
+.notif-text span{color:#666}
+
+/* GRAPHIQUE */
+.chart-wrap{height:160px;margin-top:8px}
+
+/* STREAKS */
+.streak-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #1a1a1a;font-size:13px}
+.streak-row:last-child{border-bottom:none}
+.streak-label{color:#888}
+.streak-val{font-weight:700;color:#00FF87}
+
+/* SWITCH PROFIL */
+.switch-profils{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.switch-btn{padding:10px;border:1.5px solid #222;border-radius:12px;background:transparent;color:#888;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s}
+.switch-btn:hover{border-color:#444;color:#f0f0f0}
+.switch-btn.active{border-color:#00FF87;color:#00FF87;background:rgba(0,255,135,0.05)}
+.mini-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.mini-k{background:rgba(0,255,135,0.15);color:#00FF87}
+.mini-a{background:rgba(255,100,150,0.15);color:#ff6496}
+
+.no-profile{text-align:center;padding:3rem 1rem}
+.no-profile h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.no-profile p{color:#555;font-size:14px;margin-bottom:1.5rem}
+.btn-home{display:inline-block;padding:12px 24px;background:#00FF87;color:#080808;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none}
+.empty{text-align:center;padding:1.5rem;color:#444;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back">← Accueil</a>
+  <div class="logo-text">Fit<span>Track</span></div>
+  <span style="font-size:13px;color:#555">Profil</span>
+</div>
+
+<div id="no-profile" style="display:none" class="no-profile">
+  <h2>Aucun profil sélectionné</h2>
+  <p>Retourne à l'accueil pour choisir ton profil.</p>
+  <a href="index.html" class="btn-home">Choisir mon profil →</a>
+</div>
+
+<div id="app" style="display:none">
+
+  <!-- SWITCH PROFIL -->
+  <div class="switch-profils">
+    <button class="switch-btn" id="btn-kamal" onclick="switchProfil('kamal')">
+      <div class="mini-avatar mini-k">K</div> Kamal
+    </button>
+    <button class="switch-btn" id="btn-alicia" onclick="switchProfil('alicia')">
+      <div class="mini-avatar mini-a">A</div> Alicia
+    </button>
+  </div>
+
+  <!-- HERO -->
+  <div class="profil-hero" id="profil-hero"></div>
+
+  <!-- STATS GLOBALES -->
+  <div class="stats-global" id="stats-global"></div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="card">
+    <p class="section-title">💬 Notifications & conseils</p>
+    <div id="notifs"></div>
+  </div>
+
+  <!-- STREAKS -->
+  <div class="card">
+    <p class="section-title">🔥 Régularité</p>
+    <div id="streaks"></div>
+  </div>
+
+  <!-- GRAPHIQUE CALORIES 7J -->
+  <div class="card">
+    <p class="section-title">📊 Calories — 7 derniers jours</p>
+    <div class="chart-wrap"><canvas id="chart-kcal"></canvas></div>
+  </div>
+
+  <!-- GRAPHIQUE RUNNING -->
+  <div class="card">
+    <p class="section-title">🏃 Running — progression allure</p>
+    <div class="chart-wrap"><canvas id="chart-run"></canvas></div>
+  </div>
+
+</div>
+
+<script>
+const PROFILES={
+  kamal:{name:'Kamal',avatarClass:'avatar-kamal',initial:'K',goal:2000,protGoal:140,objectif:'Objectif : 75 kg'},
+  alicia:{name:'Alicia',avatarClass:'avatar-alicia',initial:'A',goal:1600,protGoal:100,objectif:'Objectif forme'},
+};
+
+let currentUser=localStorage.getItem('fittrack_user')||null;
+let chartKcalInstance=null;
+let chartRunInstance=null;
+
+if(!currentUser){
+  document.getElementById('no-profile').style.display='block';
+} else {
+  document.getElementById('app').style.display='block';
+  renderProfil(currentUser);
+}
+
+function switchProfil(user){
+  currentUser=user;
+  localStorage.setItem('fittrack_user',user);
+  renderProfil(user);
+}
+
+function today(){return new Date().toISOString().slice(0,10);}
+
+function getDays(n){
+  const days=[];
+  for(let i=n-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));}
+  return days;
+}
+
+function renderProfil(user){
+  const profile=PROFILES[user];
+  const calEntries=JSON.parse(localStorage.getItem('cal_entries_'+user)||'[]');
+  const runSessions=JSON.parse(localStorage.getItem('run_sessions_'+user)||'[]');
+  const goalKcal=parseInt(localStorage.getItem('cal_goal_'+user)||profile.goal);
+  const goalProt=parseInt(localStorage.getItem('cal_prot_goal_'+user)||profile.protGoal);
+
+  // Switch buttons
+  document.querySelectorAll('.switch-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn-'+user).classList.add('active');
+
+  // HERO
+  const joursCalories=new Set(calEntries.map(e=>e.date)).size;
+  const joursRunning=runSessions.length;
+  document.getElementById('profil-hero').innerHTML=`
+    <div class="profil-avatar ${profile.avatarClass}">${profile.initial}</div>
+    <div class="profil-info">
+      <h2>${profile.name}</h2>
+      <p>${profile.objectif}</p>
+      <span class="profil-badge">⚡ ${joursCalories} jours trackés · ${joursRunning} séances running</span>
+    </div>
+  `;
+
+  // STATS GLOBALES
+  const totalKcal=Math.round(calEntries.reduce((s,e)=>s+e.kcal,0));
+  const totalProt=Math.round(calEntries.reduce((s,e)=>s+e.prot,0));
+  const totalKm=runSessions.reduce((s,r)=>s+r.dist,0).toFixed(1);
+  const totalRunCal=runSessions.reduce((s,r)=>s+r.cal,0);
+  const moyKcal=joursCalories?Math.round(totalKcal/joursCalories):0;
+  document.getElementById('stats-global').innerHTML=`
+    <div class="stat-glob"><div class="stat-glob-val" style="color:#00FF87">${totalKcal.toLocaleString()}</div><div class="stat-glob-label">kcal totales</div></div>
+    <div class="stat-glob"><div class="stat-glob-val" style="color:#6496ff">${totalProt}g</div><div class="stat-glob-label">Protéines totales</div></div>
+    <div class="stat-glob"><div class="stat-glob-val">${totalKm}</div><div class="stat-glob-label">km courus</div></div>
+    <div class="stat-glob"><div class="stat-glob-val">${moyKcal}</div><div class="stat-glob-label">Moy kcal/jour</div></div>
+    <div class="stat-glob"><div class="stat-glob-val" style="color:#ffa500">${totalRunCal.toLocaleString()}</div><div class="stat-glob-label">kcal brûlées running</div></div>
+    <div class="stat-glob"><div class="stat-glob-val">${joursRunning}</div><div class="stat-glob-label">Séances running</div></div>
+  `;
+
+  // NOTIFICATIONS
+  renderNotifs(calEntries,runSessions,goalKcal,goalProt,user);
+
+  // STREAKS
+  renderStreaks(calEntries,runSessions);
+
+  // GRAPHIQUES
+  renderChartKcal(calEntries,goalKcal);
+  renderChartRun(runSessions);
+}
+
+function renderNotifs(calEntries,runSessions,goalKcal,goalProt,user){
+  const notifs=[];
+  const tod=today();
+  const todayEntries=calEntries.filter(e=>e.date===tod);
+  const todayKcal=Math.round(todayEntries.reduce((s,e)=>s+e.kcal,0));
+  const todayProt=Math.round(todayEntries.reduce((s,e)=>s+e.prot,0));
+
+  // Calories aujourd'hui
+  if(todayEntries.length===0){
+    notifs.push({type:'warn',icon:'🍽️',title:'Aucun repas enregistré aujourd\'hui',text:'Lance le compteur de calories pour commencer le suivi !'});
+  } else if(todayKcal>=goalKcal){
+    notifs.push({type:'ok',icon:'✅',title:'Objectif calories atteint !',text:`Tu as consommé ${todayKcal} kcal sur ${goalKcal} kcal visés aujourd'hui.`});
+  } else {
+    const reste=goalKcal-todayKcal;
+    notifs.push({type:'info',icon:'🔥',title:`${todayKcal} kcal aujourd'hui`,text:`Il te reste ${reste} kcal à consommer pour atteindre ton objectif.`});
+  }
+
+  // Protéines aujourd'hui
+  if(todayEntries.length>0){
+    if(todayProt>=goalProt){
+      notifs.push({type:'ok',icon:'💪',title:'Objectif protéines atteint !',text:`${todayProt}g de protéines consommées. Excellent pour la récupération musculaire !`});
+    } else {
+      notifs.push({type:'warn',icon:'💪',title:`Protéines : ${todayProt}g / ${goalProt}g`,text:`Il te manque ${goalProt-todayProt}g de protéines. Pense à ajouter du skyr, du poulet ou du thon.`});
+    }
+  }
+
+  // Running cette semaine
+  const now=new Date();
+  const weekStart=new Date(now);
+  weekStart.setDate(now.getDate()-now.getDay()+1);
+  const weekStr=weekStart.toISOString().slice(0,10);
+  const sessionsWeek=runSessions.filter(s=>s.date>=weekStr);
+  if(sessionsWeek.length===0){
+    notifs.push({type:'warn',icon:'🏃',title:'Pas de running cette semaine',text:'Lance une séance pour maintenir ta progression !'});
+  } else {
+    const kmWeek=sessionsWeek.reduce((s,r)=>s+r.dist,0).toFixed(1);
+    notifs.push({type:'ok',icon:'🏃',title:`${sessionsWeek.length} séance${sessionsWeek.length>1?'s':''} cette semaine`,text:`${kmWeek} km parcourus cette semaine. Continue comme ça !`});
+  }
+
+  // Régularité calories
+  const days7=getDays(7);
+  const joursTrackes=days7.filter(d=>calEntries.some(e=>e.date===d)).length;
+  if(joursTrackes>=6){
+    notifs.push({type:'ok',icon:'🔥',title:`Streak de ${joursTrackes}/7 jours !`,text:'Excellente régularité sur les 7 derniers jours. Continue !'});
+  } else if(joursTrackes>=4){
+    notifs.push({type:'info',icon:'📊',title:`${joursTrackes}/7 jours trackés cette semaine`,text:'Bonne régularité ! Essaie de tracker tous les jours pour un suivi optimal.'});
+  }
+
+  const el=document.getElementById('notifs');
+  if(!notifs.length){el.innerHTML='<div class="empty">Tout est nickel ! 🎉</div>';return;}
+  el.innerHTML=notifs.map(n=>`
+    <div class="notif notif-${n.type}">
+      <div class="notif-icon">${n.icon}</div>
+      <div class="notif-text"><strong>${n.title}</strong><span>${n.text}</span></div>
+    </div>
+  `).join('');
+}
+
+function renderStreaks(calEntries,runSessions){
+  const days=getDays(30);
+
+  // Streak calories actuel
+  let streakCal=0;
+  const allDates=new Set(calEntries.map(e=>e.date));
+  for(let i=0;i<30;i++){
+    const d=new Date();d.setDate(d.getDate()-i);
+    if(allDates.has(d.toISOString().slice(0,10)))streakCal++;
+    else break;
+  }
+
+  // Meilleur streak
+  let bestStreak=0,cur=0;
+  days.forEach(d=>{
+    if(allDates.has(d)){cur++;bestStreak=Math.max(bestStreak,cur);}
+    else cur=0;
+  });
+
+  // Jours avec objectif atteint cette semaine
+  const days7=getDays(7);
+  const goalKcal=2000;
+  const joursObjectif=days7.filter(d=>{
+    const kcal=Math.round(calEntries.filter(e=>e.date===d).reduce((s,e)=>s+e.kcal,0));
+    return kcal>0 && kcal<=goalKcal*1.1;
+  }).length;
+
+  // Séances running ce mois
+  const moisStr=new Date().toISOString().slice(0,7);
+  const sessionsMois=runSessions.filter(s=>s.date.startsWith(moisStr)).length;
+  const kmMois=runSessions.filter(s=>s.date.startsWith(moisStr)).reduce((s,r)=>s+r.dist,0).toFixed(1);
+
+  document.getElementById('streaks').innerHTML=`
+    <div class="streak-row"><span class="streak-label">🔥 Streak actuel (jours consécutifs)</span><span class="streak-val">${streakCal} jour${streakCal>1?'s':''}</span></div>
+    <div class="streak-row"><span class="streak-label">🏆 Meilleur streak (30 jours)</span><span class="streak-val">${bestStreak} jour${bestStreak>1?'s':''}</span></div>
+    <div class="streak-row"><span class="streak-label">✅ Jours objectif atteint (7j)</span><span class="streak-val">${joursObjectif}/7</span></div>
+    <div class="streak-row"><span class="streak-label">🏃 Séances running ce mois</span><span class="streak-val">${sessionsMois} séance${sessionsMois>1?'s':''}</span></div>
+    <div class="streak-row"><span class="streak-label">📍 Km courus ce mois</span><span class="streak-val">${kmMois} km</span></div>
+  `;
+}
+
+function renderChartKcal(calEntries,goalKcal){
+  const days=getDays(7);
+  const labels=days.map(d=>{const p=d.split('-');return p[2]+'/'+p[1];});
+  const vals=days.map(d=>Math.round(calEntries.filter(e=>e.date===d).reduce((s,e)=>s+e.kcal,0)));
+  const ctx=document.getElementById('chart-kcal').getContext('2d');
+  if(chartKcalInstance)chartKcalInstance.destroy();
+  chartKcalInstance=new Chart(ctx,{
+    data:{labels,datasets:[
+      {type:'bar',data:vals,backgroundColor:vals.map(v=>v>goalKcal?'rgba(226,75,74,0.7)':'rgba(0,255,135,0.5)'),borderRadius:6},
+      {type:'line',data:days.map(()=>goalKcal),borderColor:'#00FF87',borderDash:[5,5],pointRadius:0,borderWidth:1.5}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#444',font:{size:11}}},y:{ticks:{color:'#444',font:{size:11}},grid:{color:'#1a1a1a'}}}}
+  });
+}
+
+function formatRythme(secPerKm){
+  const m=Math.floor(secPerKm/60);
+  const s=Math.round(secPerKm%60);
+  return m+"'"+String(s).padStart(2,'0')+'"';
+}
+
+function rythmeToSec(str){
+  if(!str||str==='—')return 0;
+  const clean=str.replace('"','');
+  const parts=clean.split("'");
+  return parseInt(parts[0])*60+(parseInt(parts[1])||0);
+}
+
+function renderChartRun(runSessions){
+  const sorted=[...runSessions].filter(s=>s.rythme&&s.rythme!=='—').sort((a,b)=>a.date.localeCompare(b.date)).slice(-8);
+  const ctx=document.getElementById('chart-run');
+  if(chartRunInstance)chartRunInstance.destroy();
+  if(sorted.length<2){
+    ctx.parentElement.innerHTML='<p style="font-size:13px;color:#444;text-align:center;padding:1.5rem">Ajoute au moins 2 séances running pour voir la progression.</p>';
+    return;
+  }
+  const labels=sorted.map(s=>s.date.split('-').slice(1).reverse().join('/'));
+  const vals=sorted.map(s=>rythmeToSec(s.rythme));
+  chartRunInstance=new Chart(ctx,{
+    data:{labels,datasets:[{type:'line',data:vals,borderColor:'#00FF87',backgroundColor:'rgba(0,255,135,0.05)',borderWidth:2,pointBackgroundColor:'#00FF87',pointRadius:5,tension:0.3,fill:true}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>formatRythme(c.raw)+' /km'}}},
+      scales:{x:{ticks:{color:'#444',font:{size:11}},grid:{color:'#1a1a1a'}},y:{reverse:true,ticks:{color:'#444',font:{size:11},callback:v=>formatRythme(v)},grid:{color:'#1a1a1a'}}}
+    }
+  });
+}
+</script>
+</body>
+</html>
