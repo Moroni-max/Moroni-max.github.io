@@ -26,18 +26,27 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
 .feature-text p{font-size:13px;font-weight:600;margin-bottom:2px}
 .feature-text span{font-size:11px;color:#555}
 .section-label{font-size:11px;font-weight:600;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-.profiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2rem}
+
+/* PROFILS */
+.profiles-wrap{margin-bottom:2rem}
+.profiles-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .profile-card{background:#111;border:1.5px solid #222;border-radius:16px;padding:1.2rem;cursor:pointer;transition:all 0.2s;text-align:center;position:relative}
-.profile-card:hover{border-color:#00FF87;background:#0a0a0a}
+.profile-card:hover{border-color:#444;background:#0a0a0a}
 .profile-card.active{border-color:#00FF87;background:rgba(0,255,135,0.05)}
 .profile-card.active .check{display:flex}
 .check{display:none;position:absolute;top:10px;right:10px;width:18px;height:18px;background:#00FF87;border-radius:50%;align-items:center;justify-content:center}
 .check svg{width:10px;height:10px;fill:#080808}
+.del-profile{display:none;position:absolute;top:10px;left:10px;width:18px;height:18px;background:#333;border-radius:50%;align-items:center;justify-content:center;font-size:10px;cursor:pointer;border:none;color:#888}
+.del-profile:hover{background:#E24B4A;color:#fff}
+.profile-card:hover .del-profile{display:flex}
+.profile-card.active .del-profile{display:none}
 .avatar{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
-.avatar-k{background:rgba(0,255,135,0.15);color:#00FF87}
-.avatar-a{background:rgba(255,100,150,0.15);color:#ff6496}
 .profile-name{font-size:15px;font-weight:700;margin-bottom:2px}
 .profile-sub{font-size:11px;color:#555}
+.btn-add-profile{width:100%;padding:12px;border:1.5px dashed #333;border-radius:16px;background:transparent;color:#555;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-add-profile:hover{border-color:#00FF87;color:#00FF87}
+
+/* APPS */
 .apps-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
 .app-card{background:#111;border:1.5px solid #222;border-radius:16px;padding:1.2rem;text-decoration:none;color:#f0f0f0;transition:all 0.2s;position:relative;overflow:hidden}
 .app-card:hover{border-color:#00FF87;background:#0a0a0a;transform:translateY(-2px)}
@@ -49,6 +58,25 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
 .app-card:hover .app-arrow{color:#00FF87}
 .no-profile-msg{font-size:12px;color:#444;text-align:center;margin-bottom:1.5rem}
 .footer{text-align:center;margin-top:3rem;font-size:12px;color:#333}
+
+/* MODAL CREATION PROFIL */
+.modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.open{display:flex}
+.modal{background:#111;border:0.5px solid #222;border-radius:16px;padding:1.5rem;max-width:380px;width:100%}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:1.25rem;letter-spacing:-0.3px}
+.modal label{display:block;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.modal input{width:100%;padding:10px 12px;border:0.5px solid #222;border-radius:8px;font-size:15px;background:#0d0d0d;color:#f0f0f0;font-family:'Inter',sans-serif;margin-bottom:16px}
+.modal input:focus{outline:none;border-color:#00FF87}
+.colors-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.color-btn{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:18px}
+.color-btn.selected{border-color:#fff;transform:scale(1.1)}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-cancel{padding:12px;border:0.5px solid #333;border-radius:10px;background:transparent;color:#888;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-cancel:hover{background:#1a1a1a}
+.btn-create{padding:12px;border:none;border-radius:10px;background:#00FF87;color:#080808;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-create:hover{background:#00e87a}
+.avatar-preview{width:56px;height:56px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;transition:all 0.2s}
+.objectif-input{margin-bottom:16px}
 </style>
 </head>
 <body>
@@ -76,19 +104,9 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
   </div>
 
   <div class="section-label">Choisir mon profil</div>
-  <div class="profiles">
-    <div class="profile-card" id="card-kamal" onclick="selectProfile('kamal')">
-      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#080808" stroke-width="1.5" fill="none"/></svg></div>
-      <div class="avatar avatar-k">K</div>
-      <div class="profile-name">Kamal</div>
-      <div class="profile-sub">Objectif : 75 kg</div>
-    </div>
-    <div class="profile-card" id="card-alicia" onclick="selectProfile('alicia')">
-      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#080808" stroke-width="1.5" fill="none"/></svg></div>
-      <div class="avatar avatar-a">A</div>
-      <div class="profile-name">Alicia</div>
-      <div class="profile-sub">Objectif forme</div>
-    </div>
+  <div class="profiles-wrap">
+    <div class="profiles-grid" id="profiles-grid"></div>
+    <button class="btn-add-profile" onclick="openModal()">+ Ajouter un profil</button>
   </div>
 
   <div class="section-label">Mes outils</div>
@@ -119,25 +137,150 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#f0f0f0;min-height:
     </a>
   </div>
   <p class="no-profile-msg" id="no-profile-msg">Sélectionne un profil pour accéder aux outils</p>
-
   <div class="footer">FitTrack · fait avec ❤️ et du code</div>
 </div>
 
-<script>
-let selected=localStorage.getItem('fittrack_user')||null;
-if(selected)activateProfile(selected);
+<!-- MODAL CREATION -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <h3>Nouveau profil</h3>
+    <div class="avatar-preview" id="avatar-preview">?</div>
+    <label>Prénom</label>
+    <input type="text" id="input-prenom" placeholder="Ex: Marie" oninput="updatePreview()">
+    <label>Objectif</label>
+    <input type="text" id="input-objectif" placeholder="Ex: Perte de poids, Objectif forme...">
+    <label>Couleur</label>
+    <div class="colors-grid" id="colors-grid"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-create" onclick="createProfile()">Créer →</button>
+    </div>
+  </div>
+</div>
 
-function selectProfile(name){
-  selected=name;
-  localStorage.setItem('fittrack_user',name);
-  activateProfile(name);
+<script>
+const COLORS=[
+  {bg:'rgba(0,255,135,0.15)',color:'#00FF87',label:'vert'},
+  {bg:'rgba(255,100,150,0.15)',color:'#ff6496',label:'rose'},
+  {bg:'rgba(100,150,255,0.15)',color:'#6496ff',label:'bleu'},
+  {bg:'rgba(255,165,0,0.15)',color:'#ffa500',label:'orange'},
+  {bg:'rgba(200,100,255,0.15)',color:'#c864ff',label:'violet'},
+  {bg:'rgba(255,80,80,0.15)',color:'#ff5050',label:'rouge'},
+  {bg:'rgba(0,200,255,0.15)',color:'#00c8ff',label:'cyan'},
+  {bg:'rgba(255,220,0,0.15)',color:'#ffdc00',label:'jaune'},
+  {bg:'rgba(100,220,100,0.15)',color:'#64dc64',label:'vert clair'},
+  {bg:'rgba(255,150,50,0.15)',color:'#ff9632',label:'corail'},
+];
+
+const DEFAULT_PROFILES=[
+  {id:'kamal',name:'Kamal',objectif:'Objectif : 75 kg',colorIdx:0,goal:2000,protGoal:140},
+  {id:'alicia',name:'Alicia',objectif:'Objectif forme',colorIdx:1,goal:1600,protGoal:100},
+];
+
+let profiles=JSON.parse(localStorage.getItem('fittrack_profiles')||'null');
+if(!profiles){
+  profiles=DEFAULT_PROFILES;
+  localStorage.setItem('fittrack_profiles',JSON.stringify(profiles));
 }
 
-function activateProfile(name){
-  document.querySelectorAll('.profile-card').forEach(c=>c.classList.remove('active'));
-  document.getElementById('card-'+name).classList.add('active');
-  ['app-calories','app-running','app-recettes','app-profil'].forEach(id=>document.getElementById(id).classList.remove('disabled'));
+let selected=localStorage.getItem('fittrack_user')||null;
+let selectedColorIdx=0;
+
+renderProfiles();
+if(selected&&profiles.find(p=>p.id===selected))activateProfile(selected);
+
+function getInitial(name){return name?name[0].toUpperCase():'?';}
+
+function renderProfiles(){
+  const grid=document.getElementById('profiles-grid');
+  grid.innerHTML=profiles.map(p=>{
+    const c=COLORS[p.colorIdx||0];
+    const isActive=selected===p.id;
+    const isDefault=p.id==='kamal'||p.id==='alicia';
+    return `<div class="profile-card${isActive?' active':''}" id="card-${p.id}" onclick="selectProfile('${p.id}')">
+      <div class="check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#080808" stroke-width="1.5" fill="none"/></svg></div>
+      ${!isDefault?`<button class="del-profile" onclick="deleteProfile(event,'${p.id}')">✕</button>`:''}
+      <div class="avatar" style="background:${c.bg};color:${c.color}">${getInitial(p.name)}</div>
+      <div class="profile-name">${p.name}</div>
+      <div class="profile-sub">${p.objectif||'Profil FitTrack'}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectProfile(id){
+  selected=id;
+  localStorage.setItem('fittrack_user',id);
+  renderProfiles();
+  activateProfile(id);
+}
+
+function activateProfile(id){
+  ['app-calories','app-running','app-recettes','app-profil'].forEach(a=>document.getElementById(a).classList.remove('disabled'));
   document.getElementById('no-profile-msg').style.display='none';
+}
+
+function deleteProfile(e,id){
+  e.stopPropagation();
+  if(!confirm('Supprimer ce profil ? Toutes ses données seront effacées.'))return;
+  profiles=profiles.filter(p=>p.id!==id);
+  localStorage.setItem('fittrack_profiles',JSON.stringify(profiles));
+  ['cal_entries_','cal_goal_','cal_prot_goal_','run_sessions_','run_obj_'].forEach(k=>localStorage.removeItem(k+id));
+  if(selected===id){
+    selected=profiles.length?profiles[0].id:null;
+    localStorage.setItem('fittrack_user',selected||'');
+    if(!selected)['app-calories','app-running','app-recettes','app-profil'].forEach(a=>document.getElementById(a).classList.add('disabled'));
+  }
+  renderProfiles();
+}
+
+// MODAL
+function openModal(){
+  selectedColorIdx=0;
+  document.getElementById('input-prenom').value='';
+  document.getElementById('input-objectif').value='';
+  renderColors();
+  updatePreview();
+  document.getElementById('modal-bg').classList.add('open');
+  setTimeout(()=>document.getElementById('input-prenom').focus(),100);
+}
+
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');}
+function closeModalOutside(e){if(e.target===document.getElementById('modal-bg'))closeModal();}
+
+function renderColors(){
+  document.getElementById('colors-grid').innerHTML=COLORS.map((c,i)=>`
+    <button class="color-btn${i===selectedColorIdx?' selected':''}" style="background:${c.bg};color:${c.color}" onclick="selectColor(${i})">
+      ${i===selectedColorIdx?'✓':''}
+    </button>
+  `).join('');
+}
+
+function selectColor(i){
+  selectedColorIdx=i;
+  renderColors();
+  updatePreview();
+}
+
+function updatePreview(){
+  const name=document.getElementById('input-prenom').value;
+  const c=COLORS[selectedColorIdx];
+  const el=document.getElementById('avatar-preview');
+  el.textContent=getInitial(name);
+  el.style.background=c.bg;
+  el.style.color=c.color;
+}
+
+function createProfile(){
+  const name=document.getElementById('input-prenom').value.trim();
+  if(!name){alert('Saisis un prénom !');return;}
+  const objectif=document.getElementById('input-objectif').value.trim()||'Profil FitTrack';
+  const id='user_'+Date.now();
+  const newProfile={id,name,objectif,colorIdx:selectedColorIdx,goal:2000,protGoal:120};
+  profiles.push(newProfile);
+  localStorage.setItem('fittrack_profiles',JSON.stringify(profiles));
+  closeModal();
+  renderProfiles();
+  selectProfile(id);
 }
 </script>
 </body>
